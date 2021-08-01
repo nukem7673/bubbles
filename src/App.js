@@ -1,23 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import PullRelease from './PullRelease.jsx';
+import Canvas from './Canvas.jsx';
+import {PulsingCircle} from './Draw';
+
 
 function App() {
+	const bubbles =[0,0,0,0,0,0,0,0,0].map(el => (  
+	<PullRelease x={window.innerWidth - 200} y={Math.floor(Math.random() * 100)}> 
+	  <Canvas 
+	  	draw={PulsingCircle} 
+		options={{}}
+	  />
+	</PullRelease> 
+	))
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+	  {bubbles}
     </div>
   );
 }
