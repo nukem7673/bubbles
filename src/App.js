@@ -1,17 +1,17 @@
 import './App.css';
-import PullRelease from './PullRelease.jsx';
+import Move from './Move.jsx';
 import Canvas from './Canvas.jsx';
 import {PulsingCircle} from './Draw';
 
 
 function App() {
 	const bubbles =[0,0,0,0,0,0,0,0,0].map(el => (  
-	<PullRelease x={window.innerWidth - 200} y={Math.floor(Math.random() * 100)}> 
+	<Move x={window.innerWidth - 200} y={Math.floor(Math.random() * 100)}> 
 	  <Canvas 
 	  	draw={PulsingCircle} 
 		options={{}}
 	  />
-	</PullRelease> 
+	</Move> 
 	))
   return (
     <div className="App">
