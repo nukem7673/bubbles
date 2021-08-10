@@ -42,7 +42,8 @@ class Bubble {
 		 if (this.velocity[1] < 0) {
                  	this.velocity[1] *= -1.01;
 		 }
-         }
+         } 
+//	if (this.x + this.velocity
 	    this.moveX = Math.sin(this.velocity[0]);
 	    this.moveY = Math.sin(this.velocity[1]);
             this.x += this.moveX; 
