@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { GradientSteps } from './Effects'
 import Bubbles from './Bubbles'
+import { WhiteCircle } from './Draw'
+
 
 const useCanvas = (draw, options = {}) => {
   const [currentCanvas, updateCanvas] = useState(null)
@@ -14,6 +16,16 @@ const useCanvas = (draw, options = {}) => {
 
     const bubbleArray = Bubbles({context});
 
+    const circleOptions = {
+      x: window.innerHeight/2,
+      y: window.innerWidth/2,
+      radius: Math.min(window.innerHeight,window.innerWidth) / 4,
+      colors: {
+        stroke: "#ffffff",
+        fill: "transparent"
+      }
+    }
+
     let frameCount = 0
     let animationFrameId
 
@@ -23,6 +35,8 @@ const useCanvas = (draw, options = {}) => {
 
       options.color = colors[frameCount % 100]
 
+      
+      WhiteCircle(circleOptions, context);
       draw(bubbleArray)
 
       animationFrameId = window.requestAnimationFrame(render)

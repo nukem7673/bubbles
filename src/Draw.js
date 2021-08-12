@@ -58,7 +58,18 @@ const DrawBubble = (context, frameCount, options) => {
 
 
 
+const WhiteCircle = (options, ctx) => {
+        const { x, y, radius, colors } = options;
+        const rad = Math.min(ctx.canvas.width, ctx.canvas.height) / 4;
+        ctx.beginPath();
+        ctx.arc(ctx.canvas.width / 2, ctx.canvas.height / 2, rad, 0, (2 * Math.PI));
+        ctx.strokeStyle = colors.stroke;
+        ctx.lineWidth = options.lineWidth || 2;
+        ctx.fillStyle = colors.fill;
+        ctx.stroke();
+        ctx.fill();
 
+}
 
 
 
@@ -73,5 +84,6 @@ module.exports = {
         PulsingCircle: PulsingCircle,
         GradientSteps: GradientSteps,
         DrawBubble: DrawBubble,
-        DrawBubbles: DrawBubbles
+        DrawBubbles: DrawBubbles,
+        WhiteCircle: WhiteCircle
 }
