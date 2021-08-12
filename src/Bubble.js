@@ -12,11 +12,11 @@ class Bubble {
                 this.strokeStyle = props.strokeStyle;
                 this.radius = props.radius;
                 this.velocity = props.velocity;
-                console.log(`initialized a bubble just now. Context: ${this.context}`)
                 this.circle = props.circle;
                 this.update = this.update.bind(this);
 
                 this.isOutsideCircle = this.isOutsideCircle.bind(this)
+                console.log(`New bubble with color ${this.color}`)
         }
 
 
@@ -29,6 +29,11 @@ class Bubble {
                         const v = this.velocity;
                         const cc = this.circle.cp; // circle center
                         const cp = [this.x + v[0], this.y + v[1]]; // collision point 
+
+                        if (distanceToCenter > (this.circle.radius + 20)){
+                                this.x = cc[0];
+                                this.y = cc[1];
+                        }
                         
                         // Subtract the collision point from all other vector points to normalize to 0,0
                         const ncp = [0, 0];
@@ -49,11 +54,11 @@ class Bubble {
                         // Get theta from cosine
                         const theta = Number( (Math.acos(cosine) * 180 / Math.PI).toFixed(5) );
 
-                        console.log(`dotProd = ${dotProd} . . . ${typeof dotProd}`)
-                        console.log(`dotx: nx(${nx}) * nr[0](${nr[0]}) = ${nx * nr[0]}`);
-                        console.log(`doty: ny(${ny}) * nr[1](${nr[1]}) = ${ny * nr[1]}`);
-                        console.log(`mags: ${mags}`);
-                        console.log(`radius: ${this.circle.radius}`);
+                        // console.log(`dotProd = ${dotProd} . . . ${typeof dotProd}`)
+                        // console.log(`dotx: nx(${nx}) * nr[0](${nr[0]}) = ${nx * nr[0]}`);
+                        // console.log(`doty: ny(${ny}) * nr[1](${nr[1]}) = ${ny * nr[1]}`);
+                        // console.log(`mags: ${mags}`);
+                        // console.log(`radius: ${this.circle.radius}`);
                         // normal x == this.x + adjacent
                         const normalX = Number( (nx + (Math.cos(90 - theta) * h)).toFixed(5) );
                         const normalY = Number( (ny + (Math.sin(90 - theta) * h)).toFixed(5) );
@@ -69,42 +74,12 @@ class Bubble {
                         let vx = Number( (newX / h).toFixed(5) );
                         let vy = Number( (newY / h).toFixed(5) );
 
-                        console.log(`cosine: ${cosine}\ntheta: ${theta}\ncurrent nx,ny: ${nx}, ${ny}\ncp: ${JSON.stringify(ncp)},\nnormal xy: ${normalX}, ${normalY}\nnew xy: ${newX}, ${newY}\nnr: ${nr[0]}, ${nr[1]}\noldSlope: ${this.velocity[0]}, ${this.velocity[1]}\nnewSlope: ${vx}, ${vy}`);
+                        // console.log(`cosine: ${cosine}\ntheta: ${theta}\ncurrent nx,ny: ${nx}, ${ny}\ncp: ${JSON.stringify(ncp)},\nnormal xy: ${normalX}, ${normalY}\nnew xy: ${newX}, ${newY}\nnr: ${nr[0]}, ${nr[1]}\noldSlope: ${this.velocity[0]}, ${this.velocity[1]}\nnewSlope: ${vx}, ${vy}`);
 
                         this.velocity = [vx, vy];
                         // console.log(`dotProd = Vy(${this.velocity[1]}) * radius(${this.circle.radius})`);
                         this.x += this.velocity[0];
-                        this.y += this.velocity[1];
-
-
-
-                        // (3, -3.5) (4, -3) 
-                        //         = 22.5
-
-                        // (5) (9 + 12.5)
-                        // 5 (4.6368)
-                        //         = 23.1840
-
-                        // 22.5 / 23.1840 
-                        //         = 0.9704968944
-                
-                        
-                        // Using collision as origin
-                        // v1 = (-1, -.5)
-                        // n = (-4, 3)
-                        // v1*n = 4 + -1.5
-                        //         = 2.5
-                        
-                        // ||v1|| = sqrt(-1^2 + -.5^2)
-                        //         = 1.118033988749895
-                        // ||v2|| = sqrt(-4^2 + 3^2)
-                        //         = 5
-
-                        // ||v1||*||v2|| = 5.590169943749475
-
-                        // v1*n / ||v1||*||v2|| = 0.447213595499958
-
-                        
+                        this.y += this.velocity[1];                        
                 } else {
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
@@ -113,7 +88,7 @@ class Bubble {
 
                 this.context.beginPath()
                 this.context.arc(this.x, this.y, this.radius, 0, (2 * Math.PI), false)
-                this.context.strokeStyle = this.strokeStyle
+                this.context.strokeStyle = this.strokeStyle;
                 this.context.fillStyle = this.color
                 this.context.lineWidth = 2
                 this.context.fill()

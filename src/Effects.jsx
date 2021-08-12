@@ -25,6 +25,14 @@ function GradientSteps(startColor, endColor, steps) {
         stepsG[i] = start['G'] + ((diffG / steps) * i);
         stepsB[i] = start['B'] + ((diffB / steps) * i);
         stepsHex[i] = '#' + Math.round(stepsR[i]).toString(16) + '' + Math.round(stepsG[i]).toString(16) + '' + Math.round(stepsB[i]).toString(16);
+
+        if (stepsHex[i].length < 7) {
+            console.warn(`${stepsHex[i]} value not long enough.`)
+            console.warn(`R: ${stepsR[i]}, G: ${stepsG[i]}, B: ${stepsB[i]}`);
+            console.warn('#' + Math.round(stepsR[i]).toString(16) + '  ' + Math.round(stepsG[i]).toString(16) + '  ' + Math.round(stepsB[i]).toString(16));
+            stepsHex[i] = stepsHex[i].replace("0", "00");
+            console.warn(`Now: ${stepsHex[i]}`);
+        }
     }
     return stepsHex;
 }

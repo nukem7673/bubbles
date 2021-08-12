@@ -7,7 +7,6 @@ import { WhiteCircle } from './Draw'
 const useCanvas = (draw, options = {}) => {
   const [currentCanvas, updateCanvas] = useState(null)
   const canvasRef = useRef(null)
-  const colors = GradientSteps('#00e1ff', '#ff00f2', 100)
   
   useEffect(() => {
     console.log(`useCanvas is now running . . . `)
@@ -32,11 +31,8 @@ const useCanvas = (draw, options = {}) => {
     const render = () => {
       context.clearRect(0, 0, canvas.width, canvas.height)
       frameCount++
-
-      options.color = colors[frameCount % 100]
-
-      
-      WhiteCircle(circleOptions, context);
+     
+      // WhiteCircle(circleOptions, context);
       draw(bubbleArray)
 
       animationFrameId = window.requestAnimationFrame(render)
