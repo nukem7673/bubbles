@@ -9,6 +9,8 @@ class Bubble {
                 this.x = props.x;
                 this.y = props.y;
                 this.color = props.color;
+		this.rx = this.x - props.circle.cp[0];
+		this.ry = this.y - props.circle.cp[1];
                 this.strokeStyle = props.strokeStyle;
                 this.radius = props.radius;
                 this.velocity = props.velocity;
@@ -22,8 +24,8 @@ class Bubble {
 
 		window.addEventListener("touchstart", () => {
 			this.isPressed = true;
-			const h = Math.sqrt((this.x - this.circle.cp[0])**2 + (this.y - this.circle.cp[1])**2);
-			const cosine = (this.x - this.circle.cp[0]) / h;
+			const h = Math.sqrt((this.rx)**2 + (this.ry)**2);
+			const cosine = this.rx / h;
 			this.theta = Math.acos(cosine);
 		})
 		window.addEventListener("touchend", () => {
@@ -35,9 +37,9 @@ class Bubble {
         update(frameCount) {
                 const distanceToCenter = this.isOutsideCircle();
 		
-		if (this.isPressed) {
-			this.x = Math.cos(this.theta*2) * distanceToCenter + this.circle.cp[0];
-			this.y = Math.sin(this.theta*2) * distanceToCenter + this.circle.cp[1];
+		if (this.isPressed || distanceToCenter > (this.cr + 25)) {
+			this.x = (Math.cos(this.theta*2) * distanceToCenter) + this.circle.cp[0];
+			this.y = (Math.sin(this.theta*2) * distanceToCenter) + this.circle.cp[1];
 			this.theta += frameCount % 2 == 0 ? 0 : .01;
 		}
 
