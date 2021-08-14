@@ -40,8 +40,8 @@ const WhiteCircle = (options, ctx) => {
 
 
 
-const DrawBubbles = (bubbleArray) => {
-        bubbleArray.forEach(bubble => bubble.update())
+const DrawBubbles = (bubbleArray, frameCount) => {
+        bubbleArray.forEach(bubble => bubble.update(frameCount))
 }
 
 

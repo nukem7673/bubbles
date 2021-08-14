@@ -14,16 +14,34 @@ class Bubble {
                 this.velocity = props.velocity;
                 this.circle = props.circle;
                 this.update = this.update.bind(this);
-
+		this.cr = props.circle.radius;
+                this.isPressed = false;
+		this.theta = null;
                 this.isOutsideCircle = this.isOutsideCircle.bind(this)
                 console.log(`New bubble with color ${this.color}`)
+
+		window.addEventListener("touchstart", () => {
+			this.isPressed = true;
+			const h = Math.sqrt((this.x - this.circle.cp[0])**2 + (this.y - this.circle.cp[1])**2);
+			const cosine = (this.x - this.circle.cp[0]) / h;
+			this.theta = Math.acos(cosine);
+		})
+		window.addEventListener("touchend", () => {
+                        this.isPressed = false;
+		})
         }
 
 
-        update() {
+        update(frameCount) {
                 const distanceToCenter = this.isOutsideCircle();
+		
+		if (this.isPressed) {
+			this.x = Math.cos(this.theta*2) * distanceToCenter + this.circle.cp[0];
+			this.y = Math.sin(this.theta*2) * distanceToCenter + this.circle.cp[1];
+			this.theta += frameCount % 2 == 0 ? 0 : .01;
+		}
 
-                if (distanceToCenter > this.circle.radius) {
+                else if (distanceToCenter > this.circle.radius) {
                         // we'll use the tangent plane intersection as the origin, simplifies dot product significantly
                         // since the radius line's x coord is 0. Also, we'll always use a magnitude of 1 for the same line leaving us with . . . 
                         const v = this.velocity;

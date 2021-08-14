@@ -33,7 +33,7 @@ const useCanvas = (draw, options = {}) => {
       frameCount++
      
       // WhiteCircle(circleOptions, context);
-      draw(bubbleArray)
+      draw(bubbleArray, frameCount)
 
       animationFrameId = window.requestAnimationFrame(render)
     }
