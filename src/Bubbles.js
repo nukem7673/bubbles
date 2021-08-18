@@ -20,7 +20,7 @@ function Bubbles(props) {
         bubbleContainer.push(new Bubble(
             {
                 circle: {
-                    cp: [ww / 2, wh / 2],
+                    cp: [ww / 2, wh / 3],
                     radius: Math.min(ww, wh) / 4
                 },
                 context: props.context,

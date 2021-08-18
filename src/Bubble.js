@@ -197,7 +197,7 @@ class Bubble {
         spiralOutShape() {
                 // number of sides changes the shape of the spiral
                 const input = document.getElementById("customRange");
-                const sides = input.value || 5;
+                const sides = input.value;
                 
                 this.x = Math.cos(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[0];
                 this.y = Math.sin(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[1];
