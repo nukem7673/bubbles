@@ -60,7 +60,7 @@ class Bubble {
 			// this.y = (Math.sin(this.theta*2) * this.dtc) + this.c.cp[1];
 			// this.theta += frameCount % 2 == 0 ? 0 : .01;
 		} 
-                else if (!this.isPressed && this.dtc > (this.cr + 5)) {
+                else if (!this.isPressed && this.dtc > (this.cr + 20)) {
                         this.spiralIn(frameCount);
                 }
 
