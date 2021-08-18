@@ -191,7 +191,13 @@ class Bubble {
                 this.x = (Math.cos(this.theta) * this.dtc * 1.01) + this.cp[0];
                 this.y = (Math.sin(this.theta) * this.dtc * 1.01) + this.cp[1];
 
+
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
+        }
+
+        spiralSwim() {
+                this.x = (Math.cos(this.theta) * (this.dtc - (Math.cos(this.dtc) * 4)) * 1.01) + this.cp[0];
+                this.y = (Math.sin(this.theta) * (this.dtc - (Math.cos(this.dtc) * 4)) * 1.01) + this.cp[1];
         }
 
         updateTail(newPoints) {
@@ -199,8 +205,8 @@ class Bubble {
                 if (this.tailPoints.length > 0) {
                         const xd = Math.abs(newPoints[0] - this.tailPoints[0][0]);
                         const yd = Math.abs(newPoints[1] - this.tailPoints[0][1]);
-                        const xyd = Math.sqrt(xd**2 + yd**2);
-                        
+                        const xyd = Math.sqrt(xd ** 2 + yd ** 2);
+
                         if (xyd > (this.cr * .4)) {
                                 this.tailPoints = [];
                                 return;
