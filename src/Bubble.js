@@ -49,11 +49,11 @@ class Bubble {
                 this.drawTail = this.drawTail.bind(this);
 
                 // Listeners
-                window.addEventListener("touchstart", this.onClick);
-                window.addEventListener("mousedown", this.onClick);
+                this.context.canvas.addEventListener("touchstart", this.onClick);
+                this.context.canvas.addEventListener("mousedown", this.onClick);
 
-                window.addEventListener("mouseup", this.onRelease);
-                window.addEventListener("touchend", this.onRelease)
+                this.context.canvas.addEventListener("mouseup", this.onRelease);
+                this.context.canvas.addEventListener("touchend", this.onRelease)
         }
 
 
@@ -160,7 +160,7 @@ class Bubble {
                 this.sine = (this.x - this.cp[1]) / this.dtc;
                 this.theta = Math.atan2((this.y - this.cp[1]), (this.x - this.cp[0]));
                 this.degrees = this.theta / Math.PI / 180;
-                console.log(`a: ${this.x - this.cp[0]}, c: ${this.cosine}, h: ${this.dtc}, theta: ${this.theta}, deg: ${this.degrees}, acos: ${Math.acos(this.cosine)}`)
+                // console.log(`a: ${this.x - this.cp[0]}, c: ${this.cosine}, h: ${this.dtc}, theta: ${this.theta}, deg: ${this.degrees}, acos: ${Math.acos(this.cosine)}`)
         };
 
         onRelease() {
@@ -194,8 +194,11 @@ class Bubble {
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
         }
 
-        spiralOutShape(sides=100) {
+        spiralOutShape() {
                 // number of sides changes the shape of the spiral
+                const input = document.getElementById("customRange");
+                const sides = input.value || 5;
+                
                 this.x = Math.cos(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[0];
                 this.y = Math.sin(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[1];
                 this.theta += .05;
