@@ -61,10 +61,9 @@ class Bubble {
                 this.dtc = this.getDtc();
 
                 if (this.isPressed) {
-                        this.spiralOut(frameCount);
-                        // this.x = (Math.cos(this.theta*2) * this.dtc) + this.c.cp[0];
-                        // this.y = (Math.sin(this.theta*2) * this.dtc) + this.c.cp[1];
-                        // this.theta += frameCount % 2 == 0 ? 0 : .01;
+                        // this.spiralOut(frameCount);
+                        // this.expandOut();
+                        this.spiralOutShape();
                 }
                 else if (!this.isPressed && this.dtc > (this.cr + 25)) {
                         this.spiralIn(frameCount);
@@ -195,9 +194,16 @@ class Bubble {
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
         }
 
-        spiralSwim() {
-                this.x = (Math.cos(this.theta) * (this.dtc - (Math.cos(this.dtc) * 4)) * 1.01) + this.cp[0];
-                this.y = (Math.sin(this.theta) * (this.dtc - (Math.cos(this.dtc) * 4)) * 1.01) + this.cp[1];
+        spiralOutShape(sides=100) {
+                // number of sides changes the shape of the spiral
+                this.x = Math.cos(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[0];
+                this.y = Math.sin(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[1];
+                this.theta += .05;
+        }
+
+        expandOut() {
+                this.x = Math.cos(this.theta) * this.dtc * 1.01 + this.cp[0];
+                this.y = Math.sin(this.theta) * this.dtc * 1.01 + this.cp[1];
         }
 
         updateTail(newPoints) {
