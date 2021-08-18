@@ -33,6 +33,10 @@ class Bubble {
                 this.color = props.color;
                 this.radius = props.radius;
                 this.strokeStyle = props.strokeStyle;
+
+                // Tail
+                this.tailLength = props.tailLength;
+                this.tailPoints = [];
                 
                 // Binds
                 this.update = this.update.bind(this);
@@ -41,6 +45,8 @@ class Bubble {
                 this.getDtc = this.getDtc.bind(this);
                 this.spiralIn = this.spiralIn.bind(this);
                 this.spiralOut = this.spiralOut.bind(this);
+                this.updateTail = this.updateTail.bind(this);
+                this.drawTail = this.drawTail.bind(this);
 
                 // Listeners
                 window.addEventListener("touchstart", this.onClick);
@@ -60,7 +66,7 @@ class Bubble {
 			// this.y = (Math.sin(this.theta*2) * this.dtc) + this.c.cp[1];
 			// this.theta += frameCount % 2 == 0 ? 0 : .01;
 		} 
-                else if (!this.isPressed && this.dtc > (this.cr + 5)) {
+                else if (!this.isPressed && this.dtc > (this.cr + 25)) {
                         this.spiralIn(frameCount);
                 }
 
@@ -71,9 +77,12 @@ class Bubble {
                         const cc = this.c.cp; // circle center
                         const cp = [this.x + v[0], this.y + v[1]]; // collision point 
 
+                        // Sometimes we can get stuck at the edge of the circle, so pop it back in the center
                         if (this.dtc > (this.c.radius + 20)){
                                 this.x = cc[0];
                                 this.y = cc[1];
+                                // Also empty out the tail points to start over
+                                this.tailPoints = [];
                         }
                         
                         // Subtract the collision point from all other vector points to normalize to 0,0
@@ -135,6 +144,10 @@ class Bubble {
                 this.context.fill()
                 this.context.stroke()
 
+
+
+                this.updateTail([this.x, this.y]);
+                this.drawTail();
         }
         
         toRadians(degree) {
@@ -179,7 +192,35 @@ class Bubble {
                 this.y = (Math.sin(this.theta) * this.dtc * 1.01) + this.cp[1];
                 
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
-        } 
+        }
+
+        updateTail(newPoints) {
+                if (this.tailPoints.length > this.tailLength) {
+                        this.tailPoints.pop();
+                        this.tailPoints.unshift(newPoints);
+                } else {
+                        this.tailPoints.push(newPoints);
+                }
+
+        }
+
+        drawTail() {
+                if (this.tailPoints.length < 1) {
+                        return;
+                }
+
+                const ctx = this.context;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+
+                this.tailPoints.map(point => {
+                        ctx.lineTo(point[0], point[1]);
+                })
+
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 5;
+                ctx.stroke();
+        }
 }
 
 

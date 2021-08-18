@@ -28,6 +28,7 @@ function Bubbles(props) {
                 strokeStyle: colors[strokeStyle],
                 key: i,
                 radius: '4',
+                tailLength: 10,
                 x: x,
                 y: y,
                 velocity: velocity
