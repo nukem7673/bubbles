@@ -8,7 +8,7 @@ class Bubble {
                 this.cw = this.context.canvas.width;
                 this.c = props.circle;
                 this.cp = this.c.cp;
-		this.cr = props.circle.radius;
+                this.cr = props.circle.radius;
 
                 // Bubble Positioning
                 this.x = props.x;
@@ -16,19 +16,19 @@ class Bubble {
                 this.velocity = props.velocity;
                 this.theta = null;
 
-		// Relative Positioning to Circle's Center
+                // Relative Positioning to Circle's Center
                 this.rx = this.x - this.cp[0];
-		this.ry = this.y - this.cp[1];
+                this.ry = this.y - this.cp[1];
 
                 // Next Position - If velocity applied
                 this.nx = this.rx + this.velocity[0];
                 this.ny = this.ry + this.velocity[1];
-                this.dtc = Math.sqrt(this.rx**2 + this.ry**2);
+                this.dtc = Math.sqrt(this.rx ** 2 + this.ry ** 2);
 
                 // State
                 this.isPressed = false;
                 this.isOutside = false;
-                
+
                 // Styling
                 this.color = props.color;
                 this.radius = props.radius;
@@ -37,7 +37,7 @@ class Bubble {
                 // Tail
                 this.tailLength = props.tailLength;
                 this.tailPoints = [];
-                
+
                 // Binds
                 this.update = this.update.bind(this);
                 this.onClick = this.onClick.bind(this);
@@ -53,19 +53,19 @@ class Bubble {
                 window.addEventListener("mousedown", this.onClick);
 
                 window.addEventListener("mouseup", this.onRelease);
-		window.addEventListener("touchend", this.onRelease)
+                window.addEventListener("touchend", this.onRelease)
         }
 
 
         update(frameCount) {
                 this.dtc = this.getDtc();
-		
-		if (this.isPressed) {
+
+                if (this.isPressed) {
                         this.spiralOut(frameCount);
-			// this.x = (Math.cos(this.theta*2) * this.dtc) + this.c.cp[0];
-			// this.y = (Math.sin(this.theta*2) * this.dtc) + this.c.cp[1];
-			// this.theta += frameCount % 2 == 0 ? 0 : .01;
-		} 
+                        // this.x = (Math.cos(this.theta*2) * this.dtc) + this.c.cp[0];
+                        // this.y = (Math.sin(this.theta*2) * this.dtc) + this.c.cp[1];
+                        // this.theta += frameCount % 2 == 0 ? 0 : .01;
+                }
                 else if (!this.isPressed && this.dtc > (this.cr + 25)) {
                         this.spiralIn(frameCount);
                 }
@@ -78,31 +78,31 @@ class Bubble {
                         const cp = [this.x + v[0], this.y + v[1]]; // collision point 
 
                         // Sometimes we can get stuck at the edge of the circle, so pop it back in the center
-                        if (this.dtc > (this.c.radius + 20)){
+                        if (this.dtc > (this.c.radius + 20)) {
                                 this.x = cc[0];
                                 this.y = cc[1];
                                 // Also empty out the tail points to start over
                                 this.tailPoints = [];
                         }
-                        
+
                         // Subtract the collision point from all other vector points to normalize to 0,0
                         const ncp = [0, 0];
-                        const nr = [Number( (cp[0] - (cp[0] * 2) ).toFixed(5)), Number( (cp[1] - (cp[1] * 2) ).toFixed(5))] // move normal to 0,0 projection
-                        const nx = Number( (this.x - cp[0]).toFixed(5));
-                        const ny = Number( (this.y - cp[1]).toFixed(5));
-                        const h = Number( (Math.sqrt(nx**2 + ny**2)).toFixed(5));
+                        const nr = [Number((cp[0] - (cp[0] * 2)).toFixed(5)), Number((cp[1] - (cp[1] * 2)).toFixed(5))] // move normal to 0,0 projection
+                        const nx = Number((this.x - cp[0]).toFixed(5));
+                        const ny = Number((this.y - cp[1]).toFixed(5));
+                        const h = Number((Math.sqrt(nx ** 2 + ny ** 2)).toFixed(5));
 
                         // Get dot product
-                        const dotProd = Number( ((nx * nr[0]) + (ny * nr[1]) ).toFixed(5) );  // x1*x2 + y1*y2
-                        
+                        const dotProd = Number(((nx * nr[0]) + (ny * nr[1])).toFixed(5));  // x1*x2 + y1*y2
+
                         // Divide by magnitude for cosine
-                        const vmag = Number( (Math.sqrt((nx**2) + (ny**2))).toFixed(5) );
-                        const nmag = Number( (Math.sqrt((nr[0]**2) + (nr[1]**2))).toFixed(5) );
-                        const mags = Number( (vmag * nmag).toFixed(5) );
-                        const cosine = Number( (dotProd / mags).toFixed(5) );
+                        const vmag = Number((Math.sqrt((nx ** 2) + (ny ** 2))).toFixed(5));
+                        const nmag = Number((Math.sqrt((nr[0] ** 2) + (nr[1] ** 2))).toFixed(5));
+                        const mags = Number((vmag * nmag).toFixed(5));
+                        const cosine = Number((dotProd / mags).toFixed(5));
 
                         // Get theta from cosine
-                        const theta = Number( (Math.acos(cosine) * 180 / Math.PI).toFixed(5) );
+                        const theta = Number((Math.acos(cosine) * 180 / Math.PI).toFixed(5));
 
                         // console.log(`dotProd = ${dotProd} . . . ${typeof dotProd}`)
                         // console.log(`dotx: nx(${nx}) * nr[0](${nr[0]}) = ${nx * nr[0]}`);
@@ -110,26 +110,26 @@ class Bubble {
                         // console.log(`mags: ${mags}`);
                         // console.log(`radius: ${this.circle.radius}`);
                         // normal x == this.x + adjacent
-                        const normalX = Number( (nx + (Math.cos(90 - theta) * h)).toFixed(5) );
-                        const normalY = Number( (ny + (Math.sin(90 - theta) * h)).toFixed(5) );
+                        const normalX = Number((nx + (Math.cos(90 - theta) * h)).toFixed(5));
+                        const normalY = Number((ny + (Math.sin(90 - theta) * h)).toFixed(5));
 
-                        const xDiff = Number( (nx - normalX).toFixed(5) );
-                        const yDiff = Number( (ny - normalY).toFixed(5) );
+                        const xDiff = Number((nx - normalX).toFixed(5));
+                        const yDiff = Number((ny - normalY).toFixed(5));
 
-                        const newX = Number( (nx - (xDiff * 2)).toFixed(5) );
-                        const newY = Number( (ny - (yDiff * 2)).toFixed(5) );
+                        const newX = Number((nx - (xDiff * 2)).toFixed(5));
+                        const newY = Number((ny - (yDiff * 2)).toFixed(5));
 
                         // Normalize velocity to a max of 1 on an axis per frame
-                        const largest = Number( (Math.max(newX, newY)).toFixed(5) );
-                        let vx = Number( (newX / h).toFixed(5) );
-                        let vy = Number( (newY / h).toFixed(5) );
+                        const largest = Number((Math.max(newX, newY)).toFixed(5));
+                        let vx = Number((newX / h).toFixed(5));
+                        let vy = Number((newY / h).toFixed(5));
 
                         // console.log(`cosine: ${cosine}\ntheta: ${theta}\ncurrent nx,ny: ${nx}, ${ny}\ncp: ${JSON.stringify(ncp)},\nnormal xy: ${normalX}, ${normalY}\nnew xy: ${newX}, ${newY}\nnr: ${nr[0]}, ${nr[1]}\noldSlope: ${this.velocity[0]}, ${this.velocity[1]}\nnewSlope: ${vx}, ${vy}`);
 
                         this.velocity = [vx, vy];
                         // console.log(`dotProd = Vy(${this.velocity[1]}) * radius(${this.circle.radius})`);
                         this.x += this.velocity[0];
-                        this.y += this.velocity[1];                        
+                        this.y += this.velocity[1];
                 } else {
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
@@ -149,7 +149,7 @@ class Bubble {
                 this.updateTail([this.x, this.y]);
                 this.drawTail();
         }
-        
+
         toRadians(degree) {
                 return (Math.PI / 180) * degree;
         }
@@ -174,7 +174,7 @@ class Bubble {
                 // console.log(`this.x = ${this.x} . . . this.circle.cp[0] = ${this.circle.cp[0]}`)
                 const yDelta = this.y - this.cp[1];
                 // console.log(`this.y = ${this.y} . . . this.circle.cp[1] = ${this.circle.cp[1]}`)
-                const dtc = Math.sqrt(xDelta**2 + yDelta**2);
+                const dtc = Math.sqrt(xDelta ** 2 + yDelta ** 2);
 
                 // console.log(`xDelta: ${xDelta} . . . yDelta: ${yDelta} . . . dtc: ${this.dtc} . . `);
                 this.dtc = dtc;
@@ -184,24 +184,32 @@ class Bubble {
         spiralIn(frameCount) {
                 this.x = Math.sin(this.theta) * this.dtc * .99 + this.cp[0];
                 this.y = Math.cos(this.theta) * this.dtc * .99 + this.cp[1];
-                this.theta -= frameCount %2 == 0 ? 0 : .1;
+                this.theta -= frameCount % 2 == 0 ? 0 : .1;
         }
-        
+
         spiralOut(frameCount) {
                 this.x = (Math.cos(this.theta) * this.dtc * 1.01) + this.cp[0];
                 this.y = (Math.sin(this.theta) * this.dtc * 1.01) + this.cp[1];
-                
+
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
         }
 
         updateTail(newPoints) {
+                // check to make sure the next tail point isn't longer than 40% of the radius
+                if (this.tailPoints.length > 0) {
+                        const xd = Math.abs(newPoints[0] - this.tailPoints[0][0]);
+                        const yd = Math.abs(newPoints[1] - this.tailPoints[0][1]);
+                        const xyd = Math.sqrt(xd**2 + yd**2);
+                        
+                        if (xyd > (this.cr * .4)) {
+                                this.tailPoints = [];
+                                return;
+                        }
+                }
                 if (this.tailPoints.length > this.tailLength) {
                         this.tailPoints.pop();
-                        this.tailPoints.unshift(newPoints);
-                } else {
-                        this.tailPoints.push(newPoints);
                 }
-
+                this.tailPoints.unshift(newPoints);
         }
 
         drawTail() {
