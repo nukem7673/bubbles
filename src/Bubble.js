@@ -1,56 +1,77 @@
-import Canvas from "./Canvas";
+// Particle
 
 class Bubble {
         constructor(props) {
+                // Context and canvas props
                 this.context = props.context;
-                this.canvas = this.context.canvas;
-                this.ch = this.canvas.height;
-                this.cw = this.canvas.width;
+                this.ch = this.context.canvas.height;
+                this.cw = this.context.canvas.width;
+                this.c = props.circle;
+                this.cp = this.c.cp;
+		this.cr = props.circle.radius;
+
+                // Bubble Positioning
                 this.x = props.x;
                 this.y = props.y;
-                this.color = props.color;
-		this.rx = this.x - props.circle.cp[0];
-		this.ry = this.y - props.circle.cp[1];
-                this.strokeStyle = props.strokeStyle;
-                this.radius = props.radius;
                 this.velocity = props.velocity;
-                this.circle = props.circle;
-                this.update = this.update.bind(this);
-		this.cr = props.circle.radius;
-                this.isPressed = false;
-		this.theta = null;
-                this.isOutsideCircle = this.isOutsideCircle.bind(this)
-                console.log(`New bubble with color ${this.color}`)
+                this.theta = null;
 
-		window.addEventListener("touchstart", () => {
-			this.isPressed = true;
-			const h = Math.sqrt((this.rx)**2 + (this.ry)**2);
-			const cosine = this.rx / h;
-			this.theta = Math.acos(cosine);
-		})
-		window.addEventListener("touchend", () => {
-                        this.isPressed = false;
-		})
+		// Relative Positioning to Circle's Center
+                this.rx = this.x - this.cp[0];
+		this.ry = this.y - this.cp[1];
+
+                // Next Position - If velocity applied
+                this.nx = this.rx + this.velocity[0];
+                this.ny = this.ry + this.velocity[1];
+                this.dtc = Math.sqrt(this.rx**2 + this.ry**2);
+
+                // State
+                this.isPressed = false;
+                this.isOutside = false;
+                
+                // Styling
+                this.color = props.color;
+                this.radius = props.radius;
+                this.strokeStyle = props.strokeStyle;
+                
+                // Binds
+                this.update = this.update.bind(this);
+                this.onClick = this.onClick.bind(this);
+                this.onRelease = this.onRelease.bind(this);
+                this.getDtc = this.getDtc.bind(this);
+                this.spiralIn = this.spiralIn.bind(this);
+                this.spiralOut = this.spiralOut.bind(this);
+
+                // Listeners
+                window.addEventListener("touchstart", this.onClick);
+                window.addEventListener("mousedown", this.onClick);
+
+                window.addEventListener("mouseup", this.onRelease);
+		window.addEventListener("touchend", this.onRelease)
         }
 
 
         update(frameCount) {
-                const distanceToCenter = this.isOutsideCircle();
+                this.dtc = this.getDtc();
 		
-		if (this.isPressed || distanceToCenter > (this.cr + 25)) {
-			this.x = (Math.cos(this.theta*2) * distanceToCenter) + this.circle.cp[0];
-			this.y = (Math.sin(this.theta*2) * distanceToCenter) + this.circle.cp[1];
-			this.theta += frameCount % 2 == 0 ? 0 : .01;
-		}
+		if (this.isPressed) {
+                        this.spiralOut(frameCount);
+			// this.x = (Math.cos(this.theta*2) * this.dtc) + this.c.cp[0];
+			// this.y = (Math.sin(this.theta*2) * this.dtc) + this.c.cp[1];
+			// this.theta += frameCount % 2 == 0 ? 0 : .01;
+		} 
+                else if (!this.isPressed && this.dtc > (this.cr + 5)) {
+                        this.spiralIn(frameCount);
+                }
 
-                else if (distanceToCenter > this.circle.radius) {
+                else if (this.dtc > this.c.radius) {
                         // we'll use the tangent plane intersection as the origin, simplifies dot product significantly
                         // since the radius line's x coord is 0. Also, we'll always use a magnitude of 1 for the same line leaving us with . . . 
                         const v = this.velocity;
-                        const cc = this.circle.cp; // circle center
+                        const cc = this.c.cp; // circle center
                         const cp = [this.x + v[0], this.y + v[1]]; // collision point 
 
-                        if (distanceToCenter > (this.circle.radius + 20)){
+                        if (this.dtc > (this.c.radius + 20)){
                                 this.x = cc[0];
                                 this.y = cc[1];
                         }
@@ -115,16 +136,50 @@ class Bubble {
                 this.context.stroke()
 
         }
-
-        isOutsideCircle() {
-                const xDelta = Math.abs(this.circle.cp[0] - (this.x + this.velocity[0]));
-                // console.log(`this.x = ${this.x} . . . this.circle.cp[0] = ${this.circle.cp[0]}`)
-                const yDelta = Math.abs(this.circle.cp[1] - (this.y + this.velocity[1]));
-                // console.log(`this.y = ${this.y} . . . this.circle.cp[1] = ${this.circle.cp[1]}`)
-                const distanceToCenter = Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2));
-                // console.log(`xDelta: ${xDelta} . . . yDelta: ${yDelta} . . . dttc: ${distanceToCenter} . . . radius: ${this.circle.radius}`);
-                return distanceToCenter;
+        
+        toRadians(degree) {
+                return (Math.PI / 180) * degree;
         }
+
+        onClick() {
+                this.isPressed = true;
+                this.getDtc()
+                this.cosine = (this.x - this.cp[0]) / this.dtc;
+                this.sine = (this.x - this.cp[1]) / this.dtc;
+                this.theta = Math.atan2((this.y - this.cp[1]), (this.x - this.cp[0]));
+                this.degrees = this.theta / Math.PI / 180;
+                console.log(`a: ${this.x - this.cp[0]}, c: ${this.cosine}, h: ${this.dtc}, theta: ${this.theta}, deg: ${this.degrees}, acos: ${Math.acos(this.cosine)}`)
+        };
+
+        onRelease() {
+                this.isPressed = false;
+                this.dtc = this.getDtc();
+        }
+
+        getDtc() {
+                const xDelta = this.x - this.cp[0];
+                // console.log(`this.x = ${this.x} . . . this.circle.cp[0] = ${this.circle.cp[0]}`)
+                const yDelta = this.y - this.cp[1];
+                // console.log(`this.y = ${this.y} . . . this.circle.cp[1] = ${this.circle.cp[1]}`)
+                const dtc = Math.sqrt(xDelta**2 + yDelta**2);
+
+                // console.log(`xDelta: ${xDelta} . . . yDelta: ${yDelta} . . . dtc: ${this.dtc} . . `);
+                this.dtc = dtc;
+                return dtc;
+        }
+
+        spiralIn(frameCount) {
+                this.x = Math.sin(this.theta) * this.dtc * .99 + this.cp[0];
+                this.y = Math.cos(this.theta) * this.dtc * .99 + this.cp[1];
+                this.theta -= frameCount %2 == 0 ? 0 : .1;
+        }
+        
+        spiralOut(frameCount) {
+                this.x = (Math.cos(this.theta) * this.dtc * 1.01) + this.cp[0];
+                this.y = (Math.sin(this.theta) * this.dtc * 1.01) + this.cp[1];
+                
+                this.theta += frameCount % 2 == 0 ? 0 : .1;
+        } 
 }
 
 
