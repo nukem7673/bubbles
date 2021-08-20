@@ -202,15 +202,22 @@ class Bubble {
         spiralOutShape(frameCount) {
                 // number of sides changes the shape of the spiral
                 const input = document.getElementById("customRange");
-                const sides = input.value;
+                const spiralButton = document.getElementById("spiralBtn");
 
-                const mag = this.r * Math.cos(this.theta * sides) * 2;
+                const sides = input.value;
+                const spiralOut = spiralButton.classList[1] == "btn-outline-success";
+
+                let mag = this.r * Math.cos(this.theta * sides) * 2;
+
+                if (spiralOut){
+                        mag = this.dtc * Math.cos(this.theta * sides) * 2;
+                        console.log('true');
+                }
 
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
 
                 // Don't extend past window edges
-                const inside = this.x < window.innerHeight && this.y < window.innerWidth;
                 this.theta += .05;
                 this.r += .05;
                 
