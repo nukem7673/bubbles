@@ -204,8 +204,13 @@ class Bubble {
                 const input = document.getElementById("customRange");
                 const spiralButton = document.getElementById("spiralBtn");
 
-                const sides = input.value;
+                let sides = input.value;
                 const spiralOut = spiralButton.classList[1] == "btn-outline-success";
+
+                // Even numbers are doubled
+                if (sides % 2 == 0){
+                        sides /= 2;
+                }
 
                 let mag = this.r * Math.cos(this.theta * sides) * 2;
 
