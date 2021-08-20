@@ -11,7 +11,7 @@ function Bubbles(props) {
     // Initialization
     const bubbleContainer = []
 
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 400; i++) {
         const x = Math.floor((Math.random() * 200) + (ww / 2 - 100))
         const y = Math.floor((Math.random() * 200) + (wh / 2 - 100))
         const velocity = [((Math.random() * 4) - 2), ((Math.random() * 10) - 5)];

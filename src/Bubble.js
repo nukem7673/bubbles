@@ -210,7 +210,7 @@ class Bubble {
                 let mag = this.r * Math.cos(this.theta * sides) * 2;
 
                 if (spiralOut){
-                        mag = this.dtc * Math.cos(this.theta * sides) * 2;
+                        mag = this.r * Math.cos(this.r * sides) * 2;
                         console.log('true');
                 }
 
@@ -218,7 +218,7 @@ class Bubble {
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
 
                 // Don't extend past window edges
-                this.theta += .05;
+                this.theta += .001;
                 this.r += .05;
                 
         }
