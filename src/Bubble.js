@@ -63,7 +63,7 @@ class Bubble {
                 if (this.isPressed) {
                         // this.spiralOut(frameCount);
                         // this.expandOut();
-                        this.spiralOutShape();
+                        this.spiralOutShape(frameCount);
                 }
                 else if (!this.isPressed && this.dtc > (this.cr + 25)) {
                         this.spiralIn(frameCount);
@@ -129,24 +129,28 @@ class Bubble {
                         // console.log(`dotProd = Vy(${this.velocity[1]}) * radius(${this.circle.radius})`);
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
+
+                        // Empty tail to avoid spikey graphics
+                        this.tailPoints = [];
                 } else {
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
                 }
 
 
+                // Draw tail first for layering
+                this.updateTail([this.x, this.y]);
+		this.drawTail();
+
+
+                // Then draw circle for greater z-index
                 this.context.beginPath()
                 this.context.arc(this.x, this.y, this.radius, 0, (2 * Math.PI), false)
                 this.context.strokeStyle = this.strokeStyle;
                 this.context.fillStyle = this.color
-                this.context.lineWidth = 2
+                this.context.lineWidth = 1
                 this.context.fill()
                 this.context.stroke()
-
-
-
-                this.updateTail([this.x, this.y]);
-                this.drawTail();
         }
 
         toRadians(degree) {
@@ -160,6 +164,7 @@ class Bubble {
                 this.sine = (this.x - this.cp[1]) / this.dtc;
                 this.theta = Math.atan2((this.y - this.cp[1]), (this.x - this.cp[0]));
                 this.degrees = this.theta / Math.PI / 180;
+		this.r = this.dtc;
                 // console.log(`a: ${this.x - this.cp[0]}, c: ${this.cosine}, h: ${this.dtc}, theta: ${this.theta}, deg: ${this.degrees}, acos: ${Math.acos(this.cosine)}`)
         };
 
@@ -194,14 +199,21 @@ class Bubble {
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
         }
 
-        spiralOutShape() {
+        spiralOutShape(frameCount) {
                 // number of sides changes the shape of the spiral
                 const input = document.getElementById("customRange");
                 const sides = input.value;
-                
-                this.x = Math.cos(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[0];
-                this.y = Math.sin(this.theta) * (this.theta + Math.cos(this.theta*sides)) * 20 + this.cp[1];
+
+                const mag = this.r * Math.cos(this.theta * sides) * 2;
+
+                this.x = Math.cos(this.theta) * (mag) + this.cp[0];
+                this.y = Math.sin(this.theta) * (mag) + this.cp[1];
+
+                // Don't extend past window edges
+                const inside = this.x < window.innerHeight && this.y < window.innerWidth;
                 this.theta += .05;
+                this.r += .05;
+                
         }
 
         expandOut() {
@@ -216,10 +228,10 @@ class Bubble {
                         const yd = Math.abs(newPoints[1] - this.tailPoints[0][1]);
                         const xyd = Math.sqrt(xd ** 2 + yd ** 2);
 
-                        if (xyd > (this.cr * .4)) {
-                                this.tailPoints = [];
-                                return;
-                        }
+                        // if (xyd > (this.cr * .4)) {
+                        //         this.tailPoints = [];
+                        //         return;
+                        // }
                 }
                 if (this.tailPoints.length > this.tailLength) {
                         this.tailPoints.pop();
@@ -228,20 +240,28 @@ class Bubble {
         }
 
         drawTail() {
+                // Skip if no points exist
                 if (this.tailPoints.length < 1) {
                         return;
                 }
-
+                // Shorthand
                 const ctx = this.context;
+
+                // Create gradient based on point locations
+                this.tailColor = ctx.createLinearGradient(this.tailPoints[0][0], this.tailPoints[0][1], this.tailPoints[this.tailPoints.length-1][0], this.tailPoints[this.tailPoints.length-1][1]);
+                this.tailColor.addColorStop(0, "#00ffff");
+                this.tailColor.addColorStop(1, "#ff00e1");
+
                 ctx.beginPath();
-                ctx.moveTo(this.x, this.y);
+                ctx.moveTo(this.tailPoints[0][0], this.tailPoints[0][1]);
 
                 this.tailPoints.map(point => {
                         ctx.lineTo(point[0], point[1]);
                 })
-
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 5;
+                
+                ctx.strokeStyle = this.tailColor;
+                
+                ctx.lineWidth = 2;
                 ctx.stroke();
         }
 }

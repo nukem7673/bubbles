@@ -21,17 +21,22 @@ function GradientSteps(startColor, endColor, steps) {
     let stepsB = [];
 
     for (var i = 0; i <= steps; i++) {
-        stepsR[i] = start['R'] + ((diffR / steps) * i);
-        stepsG[i] = start['G'] + ((diffG / steps) * i);
-        stepsB[i] = start['B'] + ((diffB / steps) * i);
-        stepsHex[i] = '#' + Math.round(stepsR[i]).toString(16) + '' + Math.round(stepsG[i]).toString(16) + '' + Math.round(stepsB[i]).toString(16);
+        stepsR[i] = Math.round(start['R'] + ((diffR / steps) * i)).toString(16);
+        stepsG[i] = Math.round(start['G'] + ((diffG / steps) * i)).toString(16);
+        stepsB[i] = Math.round(start['B'] + ((diffB / steps) * i)).toString(16);
+        stepsHex[i] = '#' + stepsR[i] + '' + stepsG[i] + '' + stepsB[i];
 
         if (stepsHex[i].length < 7) {
-            console.warn(`${stepsHex[i]} value not long enough.`)
-            console.warn(`R: ${stepsR[i]}, G: ${stepsG[i]}, B: ${stepsB[i]}`);
-            console.warn('#' + Math.round(stepsR[i]).toString(16) + '  ' + Math.round(stepsG[i]).toString(16) + '  ' + Math.round(stepsB[i]).toString(16));
-            stepsHex[i] = stepsHex[i].replace("0", "00");
-            console.warn(`Now: ${stepsHex[i]}`);
+            // Often, the value is not long enough. We loop to ensure each RGB value is 2 in length
+            const stepColors = [stepsR[i], stepsG[i], stepsB[i]];
+
+            for (var hex in stepColors){
+                if (stepColors[hex].length < 2) {
+                    stepColors[hex] = '0' + stepColors[hex];
+                }
+                stepsHex[i] = `#${stepColors.join("")}`;
+                console.log(`Final ${stepsHex[i]}`)
+            }
         }
     }
     return stepsHex;

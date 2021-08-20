@@ -3,7 +3,7 @@ import { GradientSteps } from './Effects'
 
 
 function Bubbles(props) {
-    const colors = GradientSteps('#00ffff', '#ff00e1', 400)
+    const colors = GradientSteps('#00ffff', '#ff00e1', 14)
     const wh = window.innerHeight;
     const ww = window.innerWidth;
     const center = [ww / 2, wh / 2]
@@ -11,11 +11,11 @@ function Bubbles(props) {
     // Initialization
     const bubbleContainer = []
 
-    for (var i = 0; i < 400; i++) {
+    for (var i = 0; i < 4; i++) {
         const x = Math.floor((Math.random() * 200) + (ww / 2 - 100))
         const y = Math.floor((Math.random() * 200) + (wh / 2 - 100))
         const velocity = [((Math.random() * 4) - 2), ((Math.random() * 10) - 5)];
-        const strokeStyle = i;
+        const strokeStyle = i+10;
         console.log(`pushing new bubble with the color of ${colors[i]}`)
         bubbleContainer.push(new Bubble(
             {
@@ -28,7 +28,7 @@ function Bubbles(props) {
                 strokeStyle: colors[strokeStyle],
                 key: i,
                 radius: '4',
-                tailLength: 10,
+                tailLength: 20,
                 x: x,
                 y: y,
                 velocity: velocity

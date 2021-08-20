@@ -28,18 +28,27 @@
 </head>
 
 <body>
-  <form class="text-light pt-5 w-50 mx-auto" action="#">
-    <label for="customRange">Select # of Sides</label>
-    <input type="range" class="custom-range" id="customRange" name="sides" min="1" max="100" value="5">
-  </form>
-  <h2 id="nSides" class="text-light text-center">5</h2>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root">
+  <div id="root" class="col-12">
     <!-- {% comment %} <canvas id="canvas" width="800" height="800"> {% endcomment -->
   </div>
+  <div id="controls" class="container d-flex flex-row justify-content-between align-items-center w-100">
+    <!-- <div class="d-flex align-items-center justify-content-between flex-row"> -->
+      <div class="d-flex flex-column">
+        <h4 class="text-light">Shape Sides</h4>
+        <input type="range" class="custom-range" id="customRange" name="sides" min="1" max="100" value="5">
+      </div>
+      <h2 id="nSides" class="display-4 text-light text-center ml-4">5</h2>
+    <button id="spiralBtn" class="btn btn-outline-light" type="button">Spiral Out</button>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+  </div>
   <script>
-    $("#customRange").on("change", () => {
+    $("#customRange").on("input", () => {
       $("#nSides").text($("#customRange").val());
+    })
+
+    $("#spiralBtn").on("click", (e) => {
+      e.preventDefault();
+      $("#spiralBtn").toggleClass('btn-outline-light btn-outline-success');
     })
   </script>
 </body>
