@@ -52,12 +52,16 @@ class Bubble {
                 this.updateTail = this.updateTail.bind(this);
                 this.handleSlider = this.handleSlider.bind(this);
                 this.handleLocoBtn = this.handleLocoBtn.bind(this);
+                this.handleTailSlider = this.handleTailSlider.bind(this);
+                this.handleSizeSlider = this.handleSizeSlider.bind(this);
     
-                // Inputs - Number of sides changes the shape of the spiral
+                // Controls
                 this.shapeSidesInput = document.getElementById("customRange");
+                this.sizeSlider = document.getElementById("sizeRange");
+                this.tailSlider = document.getElementById("tailRange");
                 this.locoBtn = document.getElementById("spiralBtn");
     
-                // Shape parameters
+                // Shape Parameters
                 this.sides = this.shapeSidesInput.value;
                 this.spiralOut = this.locoBtn.classList[1] == "btn-outline-success";
     
@@ -69,6 +73,8 @@ class Bubble {
                 this.context.canvas.addEventListener("touchend", this.onRelease)
     
                 this.shapeSidesInput.addEventListener("input", this.handleSlider);
+                this.tailSlider.addEventListener("input", this.handleTailSlider);
+                this.sizeSlider.addEventListener("input", this.handleSizeSlider);
     
                 this.locoBtn.addEventListener("click", this.handleLocoBtn);
         }
@@ -271,11 +277,16 @@ class Bubble {
                 // Then draw circle for greater z-index
                 this.context.beginPath()
                 this.context.arc(this.x, this.y, this.radius, 0, (2 * Math.PI), false)
+
+                this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius);
+                this.bubbleColor.addColorStop(0, "#ff00e1");
+                this.bubbleColor.addColorStop(1, "#00ffff");
+
                 this.context.strokeStyle = this.strokeStyle;
-                this.context.fillStyle = this.color
+                this.context.fillStyle = this.bubbleColor
                 this.context.lineWidth = 1
                 this.context.fill()
-                this.context.stroke()
+                // this.context.stroke()
         }
     
         drawTail() {
@@ -288,8 +299,8 @@ class Bubble {
     
                 // Create gradient based on point locations
                 this.tailColor = ctx.createLinearGradient(this.tailPoints[0][0], this.tailPoints[0][1], this.tailPoints[this.tailPoints.length - 1][0], this.tailPoints[this.tailPoints.length - 1][1]);
-                this.tailColor.addColorStop(0, "#00ffff");
-                this.tailColor.addColorStop(1, "#ff00e1");
+                this.tailColor.addColorStop(0, "#ff00e1");
+                this.tailColor.addColorStop(1, "#00ffff00");
     
                 ctx.beginPath();
                 ctx.moveTo(this.tailPoints[0][0], this.tailPoints[0][1]);
@@ -300,7 +311,7 @@ class Bubble {
     
                 ctx.strokeStyle = this.tailColor;
     
-                ctx.lineWidth = 2;
+                ctx.lineWidth = this.radius;
                 ctx.stroke();
         }
     
@@ -311,6 +322,17 @@ class Bubble {
     
         handleLocoBtn() {
                 this.loco = !this.loco;
+        }
+
+        handleTailSlider(e) {
+                e.preventDefault();
+                this.tailLength = this.tailSlider.value;
+                this.tailPoints = this.tailPoints.slice(0, this.tailLength - 1);
+        }
+
+        handleSizeSlider(e) {
+                e.preventDefault();
+                this.radius = this.sizeSlider.value;
         }
     }
     
