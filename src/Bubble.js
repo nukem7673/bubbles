@@ -233,16 +233,11 @@ class Bubble {
         }
     
         spiralOutShape(frameCount) {
-                // Even numbers are doubled
-                if (this.sides % 2 == 0) {
-                        this.sides /= 2;
-                }
-    
                 let mag = this.r * Math.cos(this.theta * this.sides);
     
                 if (this.loco) {
                         mag = this.theta * Math.cos(this.theta * this.sides) + this.r;
-                        this.theta += .05;
+                        this.theta += .1;
                 }
     
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
@@ -265,11 +260,6 @@ class Bubble {
                         const xd = Math.abs(newPoints[0] - this.tailPoints[0][0]);
                         const yd = Math.abs(newPoints[1] - this.tailPoints[0][1]);
                         const xyd = Math.sqrt(xd ** 2 + yd ** 2);
-    
-                        // if (xyd > (this.cr * .4)) {
-                        //         this.tailPoints = [];
-                        //         return;
-                        // }
                 }
                 if (this.tailPoints.length > this.tailLength) {
                         this.tailPoints.pop();
