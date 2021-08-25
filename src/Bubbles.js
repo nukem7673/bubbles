@@ -3,15 +3,17 @@ import { GradientSteps } from './Effects'
 
 
 function Bubbles(props) {
-    const colors = GradientSteps('#00ffff', '#ff00e1', 14)
+    const colors = GradientSteps('#00ffff', '#ff00e1', 14);
     const wh = window.innerHeight;
     const ww = window.innerWidth;
-    const center = [ww / 2, wh / 2]
+    const center = [ww / 2, wh / 2];
+    const quantity = ww / 2.5;
 
     // Initialization
     const bubbleContainer = []
 
-    for (var i = 0; i < 400; i++) {
+    
+    for (var i = 0; i < quantity; i++) {
         // const x = Math.floor((Math.random() * 200) + (ww / 2 - 100))
         // const y = Math.floor((Math.random() * 200) + (wh / 2 - 100))
         const x = ww/2;
