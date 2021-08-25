@@ -168,7 +168,7 @@ input[type=range]:focus::-ms-fill-upper {
     margin-left: 0px !important;
   }
   input[type="range"] {
-    transform: rotate(90deg);
+    transform: rotate(-90deg);
     width: 8rem;
   }
 }
