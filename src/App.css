@@ -1,12 +1,12 @@
 body {
-background-color: #1a1a1a;
--webkit-touch-callout: none;
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
--o-user-select: none;
-user-select: none;
+  background-color: #1a1a1a;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .App {
@@ -43,10 +43,8 @@ user-select: none;
   color: #28a745 !important;
 }
 
-
-
-
 /* ==== SHAPE SLIDER ==== */
+
 input[type=range] {
   height: 26px;
   -webkit-appearance: none;
@@ -149,12 +147,29 @@ input[type=range]:focus::-ms-fill-upper {
   background: #AC51B5;
 }
 
-
-
 /* ======== MEDIA QUERIES ======== */
+
 @media only screen and (max-width: 500px) {
+  #controls-container {
+    bottom: 2rem;
+  }
+  #controls {
+    max-width: 85%;
+    justify-content: space-around;
+  }
+  #controls div.flex-column {
+    align-items: center;
+    justify-content: space-around;
+    height: 250px;
+    width: 70px;
+  }
+  #controls div.flex-column h4, #controls h2 {
+    font-size: 20px;
+    margin-left: 0px !important;
+  }
   input[type="range"] {
-    transform: rotate(90);
+    transform: rotate(90deg);
+    width: 8rem;
   }
 }
 
@@ -186,4 +201,5 @@ input[type=range]:focus::-ms-fill-upper {
   to {
     transform: rotate(360deg);
   } */
+
 /* } */
