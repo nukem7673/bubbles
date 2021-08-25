@@ -28,7 +28,7 @@ class Bubble {
                 // State
                 this.isPressed = false;
                 this.isOutside = false;
-                this.loco = false;
+                this.loco = true;
                 this.shouldSpiralIn = false;
     
                 // Styling
@@ -279,14 +279,12 @@ class Bubble {
                 this.context.arc(this.x, this.y, this.radius, 0, (2 * Math.PI), false)
 
                 this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius);
-                this.bubbleColor.addColorStop(0, "#ff00e1");
+                this.bubbleColor.addColorStop(0, "#ff00e177");
                 this.bubbleColor.addColorStop(1, "#00ffff");
 
-                this.context.strokeStyle = this.strokeStyle;
+
                 this.context.fillStyle = this.bubbleColor
-                this.context.lineWidth = 1
                 this.context.fill()
-                // this.context.stroke()
         }
     
         drawTail() {

@@ -149,6 +149,15 @@ input[type=range]:focus::-ms-fill-upper {
   background: #AC51B5;
 }
 
+
+
+/* ======== MEDIA QUERIES ======== */
+@media only screen and (max-width: 500px) {
+  input[type="range"] {
+    transform: rotate(90);
+  }
+}
+
 /* @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
