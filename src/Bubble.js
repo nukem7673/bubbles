@@ -28,6 +28,7 @@ class Bubble {
                 // State
                 this.isPressed = false;
                 this.isOutside = false;
+                this.loco = false;
 
                 // Styling
                 this.color = props.color;
@@ -47,6 +48,16 @@ class Bubble {
                 this.spiralOut = this.spiralOut.bind(this);
                 this.updateTail = this.updateTail.bind(this);
                 this.drawTail = this.drawTail.bind(this);
+                this.handleSlider = this.handleSlider.bind(this);
+                this.handleLocoBtn = this.handleLocoBtn.bind(this);
+
+                // Inputs - Number of sides changes the shape of the spiral
+                this.shapeSidesInput = document.getElementById("customRange");
+                this.locoBtn = document.getElementById("spiralBtn");
+
+                // Shape parameters
+                this.sides = this.shapeSidesInput.value;
+                this.spiralOut = this.locoBtn.classList[1] == "btn-outline-success";
 
                 // Listeners
                 this.context.canvas.addEventListener("touchstart", this.onClick);
@@ -54,6 +65,10 @@ class Bubble {
 
                 this.context.canvas.addEventListener("mouseup", this.onRelease);
                 this.context.canvas.addEventListener("touchend", this.onRelease)
+
+                this.shapeSidesInput.addEventListener("input", this.handleSlider);
+
+                this.locoBtn.addEventListener("click", this.handleLocoBtn);
         }
 
 
@@ -186,6 +201,7 @@ class Bubble {
         }
 
         spiralIn(frameCount) {
+                // if (!)
                 this.x = Math.sin(this.theta) * this.dtc * .99 + this.cp[0];
                 this.y = Math.cos(this.theta) * this.dtc * .99 + this.cp[1];
                 this.theta -= frameCount % 2 == 0 ? 0 : .1;
@@ -200,23 +216,16 @@ class Bubble {
         }
 
         spiralOutShape(frameCount) {
-                // number of sides changes the shape of the spiral
-                const input = document.getElementById("customRange");
-                const spiralButton = document.getElementById("spiralBtn");
-
-                let sides = input.value;
-                const spiralOut = spiralButton.classList[1] == "btn-outline-success";
-
                 // Even numbers are doubled
-                if (sides % 2 == 0){
-                        sides /= 2;
+                if (this.sides % 2 == 0){
+                        this.sides /= 2;
                 }
 
-                let mag = this.r * Math.cos(this.theta * sides) * 2;
+                let mag = this.r * Math.cos(this.theta * this.sides);
 
-                if (spiralOut){
-                        mag = this.r * Math.cos(this.r * sides) * 2;
-                        console.log('true');
+                if (this.loco){
+                        mag = this.theta * Math.cos(this.theta * this.sides) + this.r;
+                        this.theta += .05;
                 }
 
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
@@ -224,7 +233,7 @@ class Bubble {
 
                 // Don't extend past window edges
                 this.theta += .001;
-                this.r += .05;
+                // this.r += .05;
                 
         }
 
@@ -275,6 +284,15 @@ class Bubble {
                 
                 ctx.lineWidth = 2;
                 ctx.stroke();
+        }
+
+        handleSlider(e) {
+                e.preventDefault();
+                this.sides = this.shapeSidesInput.value;
+        }
+
+        handleLocoBtn() {
+                this.loco = !this.loco;
         }
 }
 
