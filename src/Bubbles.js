@@ -12,9 +12,11 @@ function Bubbles(props) {
     const bubbleContainer = []
 
     for (var i = 0; i < 400; i++) {
-        const x = Math.floor((Math.random() * 200) + (ww / 2 - 100))
-        const y = Math.floor((Math.random() * 200) + (wh / 2 - 100))
-        const velocity = [((Math.random() * 4) - 2), ((Math.random() * 10) - 5)];
+        // const x = Math.floor((Math.random() * 200) + (ww / 2 - 100))
+        // const y = Math.floor((Math.random() * 200) + (wh / 2 - 100))
+        const x = ww/2;
+        const y = wh/3;
+        const velocity = [((Math.random() * 10) - 5), ((Math.random() * 10) - 5)];
         const strokeStyle = i+10;
         console.log(`pushing new bubble with the color of ${colors[i]}`)
         bubbleContainer.push(new Bubble(
