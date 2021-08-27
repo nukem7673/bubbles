@@ -1,0 +1,31 @@
+@media only screen and (max-width: 500px) {
+    #controls-container {
+        bottom: 2rem;
+
+        #controls {
+            max-width: 85%;
+            justify-content: space-around;
+
+            div.flex-column {
+                align-items: center;
+                justify-content: space-around;
+                height: 250px;
+                width: 70px;
+
+                h4 {
+                    order: 1;
+                }
+
+                h2 {
+                    font-size: 20px;
+                    margin-left: 0px !important;
+                }
+
+                input[type="range"] {
+                    transform: rotate(-90deg);
+                    width: 8rem;
+                }
+            }
+        }
+    }
+}

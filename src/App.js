@@ -1,4 +1,5 @@
 import './App.css';
+import './main.css';
 import { DrawBubbles } from './Draw';
 import Canvas from './Canvas';
 

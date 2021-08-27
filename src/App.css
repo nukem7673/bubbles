@@ -163,6 +163,9 @@ input[type=range]:focus::-ms-fill-upper {
     height: 250px;
     width: 70px;
   }
+  #controls div.flex-column h4 {
+    order: 1;
+  }
   #controls div.flex-column h4, #controls h2 {
     font-size: 20px;
     margin-left: 0px !important;
