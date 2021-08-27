@@ -255,8 +255,8 @@ class Bubble {
                         this.x -= (this.cp[0] / 2.9);
                         this.theta += .005;
                 }
-                this.theta += .001;
-                // this.r += .05;
+                this.theta += .01;
+
     
         }
     
