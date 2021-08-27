@@ -28,7 +28,7 @@ class Bubble {
                 // State
                 this.isPressed = false;
                 this.isOutside = false;
-                this.loco = true;
+                this.loco = false;
                 this.shouldSpiralIn = false;
     
                 // Styling
