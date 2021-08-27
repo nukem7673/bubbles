@@ -16,14 +16,11 @@ function Bubbles(props) {
 
     
     for (var i = 0; i < quantity; i++) {
-        // const x = Math.floor((Math.random() * 200) + (ww / 2 - 100))
-        // const y = Math.floor((Math.random() * 200) + (wh / 2 - 100))
         const x = ww/2;
-        const y = wh/3;
+        const y = wh/2;
         const velocity = [((Math.random() * 10) - 5), ((Math.random() * 10) - 5)];
         const strokeStyle = i+10;
-        // console.log(`pushing new bubble with the color of ${colors[i]}`)
-        console.log(`min of ww(${ww}),wh(${wh}) = (${Math.min(ww, wh)})`)
+
         bubbleContainer.push(new Bubble(
             {
                 circle: {
