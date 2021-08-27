@@ -6,6 +6,8 @@ function Bubbles(props) {
     const colors = GradientSteps('#00ffff', '#ff00e1', 14);
     const wh = window.innerHeight;
     const ww = window.innerWidth;
+    props.context.canvas.width = ww;
+    props.context.canvas.height = wh;
     const center = [ww / 2, wh / 2];
     const quantity = ww / 4;
 
@@ -20,12 +22,13 @@ function Bubbles(props) {
         const y = wh/3;
         const velocity = [((Math.random() * 10) - 5), ((Math.random() * 10) - 5)];
         const strokeStyle = i+10;
-        console.log(`pushing new bubble with the color of ${colors[i]}`)
+        // console.log(`pushing new bubble with the color of ${colors[i]}`)
+        console.log(`min of ww(${ww}),wh(${wh}) = (${Math.min(ww, wh)})`)
         bubbleContainer.push(new Bubble(
             {
                 circle: {
                     cp: [ww / 2, wh / 3],
-                    radius: Math.min(ww, wh) / 4
+                    radius: Math.min(ww, wh) / 2.75
                 },
                 context: props.context,
                 color: colors[i],

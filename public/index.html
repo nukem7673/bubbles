@@ -12,6 +12,9 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!-- Font Awesome Icon CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
   <title>React App</title>
   <!-- Latest compiled and minified CSS -->
@@ -28,29 +31,45 @@
 </head>
 
 <body>
-  <div id="root" class="col-12">
+  <div id="root" class="">
     <!-- {% comment %} <canvas id="canvas" width="800" height="800"> {% endcomment -->
   </div>
-  <div id="controls-container" class="container d-flex flex-row justify-content-center">
+
+  <nav class="navbar navbar-dark fixed-bottom justify-content-end">
+
+    <div id="controls-container" class="collapse navbar-collapse">
+
       <div id="controls" class="d-flex flex-row justify-content-between align-items-center">
+
         <div class="d-flex flex-column">
           <h4 class="text-light">Shape</h4>
           <input type="range" class="custom-range" id="customRange" name="sides" min="1" max="100" value="5">
           <h2 id="nSides" class="display-4 text-light text-center ml-4"></h2>
         </div>
+
         <div class="d-flex flex-column">
           <h4 class="text-light">Size</h4>
           <input type="range" class="custom-range" id="sizeRange" name="sides" min="4" max="25" value="4">
           <h2 id="size" class="display-4 text-light text-center ml-4"></h2>
         </div>
+
         <div class="d-flex flex-column">
           <h4 class="text-light">Tail</h4>
           <input type="range" class="custom-range" id="tailRange" name="sides" min="1" max="25" value="20">
           <h2 id="tailLen" class="display-4 text-light text-center ml-4"></h2>
         </div>
-            <button id="spiralBtn" class="btn btn-outline-success" type="button">LOCO</button>
+
+        <button id="spiralBtn" class="btn btn-outline-success" type="button">LOCO</button>
+
       </div>
-  </div>
+
+    </div>
+
+    <button id="menu-icon" class="navbar-toggler justify-content-center d-flex align-items-center" type="button" data-toggle="collapse"
+      data-target="#controls-container">
+      <i class="fas fa-cog fa-2x text-light"></i>
+    </button>
+  </nav>
   <script>
     $(document).ready(() => {
       $("#nSides").text($("#customRange").val());
