@@ -249,7 +249,12 @@ class Bubble {
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
     
-                // Don't extend past window edges
+                // Special case for NON-loco-mode when sides are '1' 
+                if (this.sides == 1 && !this.loco) {
+                        // shift back to left
+                        this.x -= (this.cp[0] / 2.9);
+                        this.theta += .005;
+                }
                 this.theta += .001;
                 // this.r += .05;
     
