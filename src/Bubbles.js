@@ -9,16 +9,18 @@ function Bubbles(props) {
     props.context.canvas.width = ww;
     props.context.canvas.height = wh;
     const center = [ww / 2, wh / 2];
-    const quantity = ww / 4;
+    const quantity = ww / 10;
 
     // Initialization
     const bubbleContainer = []
 
     
     for (var i = 0; i < quantity; i++) {
-        const x = ww/2;
-        const y = wh/2;
-        const velocity = [((Math.random() * 10) - 5), ((Math.random() * 10) - 5)];
+        // Create an offset otherwise the reflections are just back and forth
+        const offsets = [randomXY(), randomXY()];
+        const x = ww/2 + offsets[0];
+        const y = wh/2 + offsets[1];
+        const velocity = [((Math.random() * 5) - 2.5), ((Math.random() * 5) - 2.5)];
         const strokeStyle = i+10;
 
         bubbleContainer.push(new Bubble(
@@ -32,7 +34,7 @@ function Bubbles(props) {
                 strokeStyle: colors[strokeStyle],
                 key: i,
                 radius: '16',
-                tailLength: 20,
+                tailLength: 1,
                 x: x,
                 y: y,
                 velocity: velocity
@@ -44,6 +46,8 @@ function Bubbles(props) {
 
 
 
-
+function randomXY() {
+    return Math.floor(Math.random() * 400) - 200;
+}
 
 export default Bubbles;

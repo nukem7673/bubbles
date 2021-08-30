@@ -105,91 +105,33 @@ class Bubble {
                 }
 
                 else if (nextDTC > this.c.radius) {
-                        // we'll use the tangent plane intersection as the origin, simplifies dot product significantly
-                        // since the radius line's x coord is 0. Also, we'll always use a magnitude of 1 for the same line leaving us with . . . 
-                        const v = this.velocity;
-                        const cc = this.c.cp; // circle center
-                        // const cp = [this.x + v[0], this.y + v[1]]; // collision point 
+                        // Define a bounce (reflection) off the inner curved surface of the circle
 
-                        // Sometimes we can get stuck at the edge of the circle, so pop it back in the center
-                        //                     if (this.dtc > (this.c.radius + 20)) {
-                        //                            this.x = cc[0];
-                        //                           this.y = cc[1];
-                        //                          // Also empty out the tail points to start over
-                        //                         this.tailPoints = [];
-                        //                }
-
-                        // Subtract the collision point from all other vector points to normalize to 0,0
-                        // const ncp = [0, 0];
-                        // const nr = [Number((cp[0] - (cp[0] * 2)).toFixed(5)), Number((cp[1] - (cp[1] * 2)).toFixed(5))] // move normal to 0,0 projection
-                        // const nx = Number((this.x - cp[0]).toFixed(5));
-                        // const ny = Number((this.y - cp[1]).toFixed(5));
-                        // const h = Number((Math.sqrt(nx ** 2 + ny ** 2)).toFixed(5));
-
-                        // Get dot product
-                        // const dotProd = Number(((nx * nr[0]) + (ny * nr[1])).toFixed(5));  // x1*x2 + y1*y2
-
-                        // Divide by magnitude for cosine
-                        // const vmag = Number((Math.sqrt((nx ** 2) + (ny ** 2))).toFixed(5));
-                        // const nmag = Number((Math.sqrt((nr[0] ** 2) + (nr[1] ** 2))).toFixed(5));
-                        // const mags = Number((vmag * nmag).toFixed(5));
-                        // const cosine = Number((dotProd / mags).toFixed(5));
-
-                        // Get theta from cosine
-                        // const theta = Number((Math.acos(cosine) * 180 / Math.PI).toFixed(5));
-
-                        // const normalX = Number((nx + (Math.cos(90 - theta) * h)).toFixed(5));
-                        /*
-                        const normalY = Number((ny + (Math.sin(90 - theta) * h)).toFixed(5));
-    
-                        const xDiff = Number((nx - normalX).toFixed(5));
-                        const yDiff = Number((ny - normalY).toFixed(5));
-    
-                        const newX = Number((nx - (xDiff * 2)).toFixed(5));
-                        const newY = Number((ny - (yDiff * 2)).toFixed(5));
-    
-                        // Normalize velocity to a max of 1 on an axis per frame
-                        const largest = Number((Math.max(newX, newY)).toFixed(5));
-                        let vx = Number((newX / h).toFixed(5));
-                        let vy = Number((newY / h).toFixed(5));
-    
-                        // console.log(`cosine: ${cosine}\ntheta: ${theta}\ncurrent nx,ny: ${nx}, ${ny}\ncp: ${JSON.stringify(ncp)},\nnormal xy: ${normalX}, ${normalY}\nnew xy: ${newX}, ${newY}\nnr: ${nr[0]}, ${nr[1]}\noldSlope: ${this.velocity[0]}, ${this.velocity[1]}\nnewSlope: ${vx}, ${vy}`);
-    
-                        this.velocity = [vx, vy];
-                        // console.log(`dotProd = Vy(${this.velocity[1]}) * radius(${this.circle.radius})`);
-                        this.x += this.velocity[0];
-                        this.y += this.velocity[1];
-    */
-                        // NORMALIZE
+                        // Collision point (if logic passes this far) is the next point
                         const collisionPoint = [this.x + this.velocity[0], this.y + this.velocity[1]];
-                        console.log(`xy: ${this.x}, ${this.y}\ncp: ${collisionPoint}`);
+
+                        // NORMALIZE - Subtract center point of circle from each point to get a "0" origin
                         const vOne = [this.x - this.cp[0], this.y - this.cp[1]];
                         const vTwo = [collisionPoint[0] - this.cp[0], collisionPoint[1] - this.cp[1]];
-                        console.log(`vOne: ${vOne}\nvTwo: ${vTwo}`);
 
-                        const vOneX = vOne[0] * 10000;
-                        const vOneY = vOne[1] * 10000;
-                        const ct = Math.atan2(vOneY, vOneX);
-                        console.log(`Math.atan2(${vOneY}, ${vOneY}) = ${Math.atan2(vOneY, vOneX)}\nct: ${ct}`)
-
-                        const vTwoX = vTwo[0] * 10000;
-                        const vTwoY = vTwo[1] * 10000;
-                        const rt = Math.atan2(vTwoY, vTwoX);
-                        console.log(`Math.atan2(${vTwoY}, ${vTwoY}) = ${Math.atan2(vTwoY, vTwoX)}\nct: ${ct}`)
+                        // Current theta - (x,y)
+                        const ct = Math.atan2(vOne[1], vOne[0]);
+                        // Reflection theta - (collision point's x,y)
+                        const rt = Math.atan2(vTwo[1], vTwo[0]);
+                        // New theta - (double the difference between ct and rt)
                         const nt = ct - ((ct - rt) * 2);
 
-
-
-                        const currentMag = this.magnitude(vOne[0], vOne[1]);
+                        // New Point - Apply theta with curent magnitude - aka this.dtc (distance to center)
                         const np = [(Math.cos(nt) * this.dtc), (Math.sin(nt) * this.dtc)];
-                        console.log(`ct: ${ct}\nrt: ${rt}\nnt: ${nt}\ncurrentMag: ${currentMag}\nnxy(vOne): ${vOne}\nncollisionPoint(vTwo): ${vTwo}\nnp: ${np}`);
 
+                        // Get velocity by finding the difference of collision point and new point
                         const xd = np[0] - vTwo[0];
                         const yd = np[1] - vTwo[1];
-                        console.log(`old velocity: ${this.velocity}`);
+
+                        // Change velocity to new values
                         this.velocity = [xd, yd];
 
-                        console.log(`new velocity: ${this.velocity}`);
+                        // Apply velocity before new draw
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
 
