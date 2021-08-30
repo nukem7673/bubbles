@@ -9,7 +9,7 @@ function Bubbles(props) {
     props.context.canvas.width = ww;
     props.context.canvas.height = wh;
     const center = [ww / 2, wh / 2];
-    const quantity = ww / 4;
+    const quantity = 1 ; //ww / 4;
 
     // Initialization
     const bubbleContainer = []

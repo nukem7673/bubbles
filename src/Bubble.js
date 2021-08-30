@@ -9,37 +9,38 @@ class Bubble {
                 this.c = props.circle;
                 this.cp = this.c.cp;
                 this.cr = props.circle.radius;
-    
+
                 // Bubble Positioning
                 this.x = props.x;
                 this.y = props.y;
                 this.velocity = props.velocity;
+                this.mag = this.magnitude(this.x, this.y);
                 this.theta = null;
-    
+
                 // Relative Positioning to Circle's Center
                 this.rx = this.x - this.cp[0];
                 this.ry = this.y - this.cp[1];
-    
+
                 // Next Position - If velocity applied
                 this.nx = this.rx + this.velocity[0];
                 this.ny = this.ry + this.velocity[1];
                 this.dtc = Math.sqrt(this.rx ** 2 + this.ry ** 2);
-    
+
                 // State
                 this.isPressed = false;
                 this.isOutside = false;
                 this.loco = false;
                 this.shouldSpiralIn = false;
-    
+
                 // Styling
                 this.color = props.color;
                 this.radius = props.radius;
                 this.strokeStyle = props.strokeStyle;
-    
+
                 // Tail
                 this.tailLength = props.tailLength;
                 this.tailPoints = [];
-    
+
                 // Binds
                 this.drawBubble = this.drawBubble.bind(this);
                 this.drawTail = this.drawTail.bind(this);
@@ -54,36 +55,38 @@ class Bubble {
                 this.handleLocoBtn = this.handleLocoBtn.bind(this);
                 this.handleTailSlider = this.handleTailSlider.bind(this);
                 this.handleSizeSlider = this.handleSizeSlider.bind(this);
-    
+
                 // Controls
                 this.shapeSidesInput = document.getElementById("customRange");
                 this.sizeSlider = document.getElementById("sizeRange");
                 this.tailSlider = document.getElementById("tailRange");
                 this.locoBtn = document.getElementById("spiralBtn");
-    
+
                 // Shape Parameters
                 this.sides = this.shapeSidesInput.value;
                 this.spiralOut = this.locoBtn.classList[1] == "btn-outline-success";
-    
+
                 // Listeners
                 this.context.canvas.addEventListener("touchstart", this.onClick);
                 this.context.canvas.addEventListener("mousedown", this.onClick);
-    
+
                 this.context.canvas.addEventListener("mouseup", this.onRelease);
                 this.context.canvas.addEventListener("touchend", this.onRelease)
-    
+
                 this.shapeSidesInput.addEventListener("input", this.handleSlider);
                 this.tailSlider.addEventListener("input", this.handleTailSlider);
                 this.sizeSlider.addEventListener("input", this.handleSizeSlider);
-    
+
                 this.locoBtn.addEventListener("click", this.handleLocoBtn);
         }
-    
-    
+
+
         update(frameCount) {
                 // DTC (distance to center) is used in many functions. Always update
                 this.dtc = this.getDtc();
-                
+                // DTC if velocity is added
+                const nextDTC = this.magnitude(this.x + this.velocity[0] - this.cp[0], this.y + this.velocity[1] - this.cp[1]);
+                console.log(`dtc: ${this.dtc}\nnextDTC: ${nextDTC}\nradius: ${this.c.radius}`);
                 // If user is holding input
                 if (this.isPressed) {
                         // this.spiralOut(frameCount);
@@ -100,48 +103,43 @@ class Bubble {
                 else if (!this.isPressed && this.shouldSpiralIn) {
                         this.spiralIn();
                 }
-    
-                else if (this.dtc > this.c.radius) {
+
+                else if (nextDTC > this.c.radius) {
                         // we'll use the tangent plane intersection as the origin, simplifies dot product significantly
                         // since the radius line's x coord is 0. Also, we'll always use a magnitude of 1 for the same line leaving us with . . . 
                         const v = this.velocity;
                         const cc = this.c.cp; // circle center
-                        const cp = [this.x + v[0], this.y + v[1]]; // collision point 
-    
+                        // const cp = [this.x + v[0], this.y + v[1]]; // collision point 
+
                         // Sometimes we can get stuck at the edge of the circle, so pop it back in the center
-                        if (this.dtc > (this.c.radius + 20)) {
-                                this.x = cc[0];
-                                this.y = cc[1];
-                                // Also empty out the tail points to start over
-                                this.tailPoints = [];
-                        }
-    
+                        //                     if (this.dtc > (this.c.radius + 20)) {
+                        //                            this.x = cc[0];
+                        //                           this.y = cc[1];
+                        //                          // Also empty out the tail points to start over
+                        //                         this.tailPoints = [];
+                        //                }
+
                         // Subtract the collision point from all other vector points to normalize to 0,0
-                        const ncp = [0, 0];
-                        const nr = [Number((cp[0] - (cp[0] * 2)).toFixed(5)), Number((cp[1] - (cp[1] * 2)).toFixed(5))] // move normal to 0,0 projection
-                        const nx = Number((this.x - cp[0]).toFixed(5));
-                        const ny = Number((this.y - cp[1]).toFixed(5));
-                        const h = Number((Math.sqrt(nx ** 2 + ny ** 2)).toFixed(5));
-    
+                        // const ncp = [0, 0];
+                        // const nr = [Number((cp[0] - (cp[0] * 2)).toFixed(5)), Number((cp[1] - (cp[1] * 2)).toFixed(5))] // move normal to 0,0 projection
+                        // const nx = Number((this.x - cp[0]).toFixed(5));
+                        // const ny = Number((this.y - cp[1]).toFixed(5));
+                        // const h = Number((Math.sqrt(nx ** 2 + ny ** 2)).toFixed(5));
+
                         // Get dot product
-                        const dotProd = Number(((nx * nr[0]) + (ny * nr[1])).toFixed(5));  // x1*x2 + y1*y2
-    
+                        // const dotProd = Number(((nx * nr[0]) + (ny * nr[1])).toFixed(5));  // x1*x2 + y1*y2
+
                         // Divide by magnitude for cosine
-                        const vmag = Number((Math.sqrt((nx ** 2) + (ny ** 2))).toFixed(5));
-                        const nmag = Number((Math.sqrt((nr[0] ** 2) + (nr[1] ** 2))).toFixed(5));
-                        const mags = Number((vmag * nmag).toFixed(5));
-                        const cosine = Number((dotProd / mags).toFixed(5));
-    
+                        // const vmag = Number((Math.sqrt((nx ** 2) + (ny ** 2))).toFixed(5));
+                        // const nmag = Number((Math.sqrt((nr[0] ** 2) + (nr[1] ** 2))).toFixed(5));
+                        // const mags = Number((vmag * nmag).toFixed(5));
+                        // const cosine = Number((dotProd / mags).toFixed(5));
+
                         // Get theta from cosine
-                        const theta = Number((Math.acos(cosine) * 180 / Math.PI).toFixed(5));
-    
-                        // console.log(`dotProd = ${dotProd} . . . ${typeof dotProd}`)
-                        // console.log(`dotx: nx(${nx}) * nr[0](${nr[0]}) = ${nx * nr[0]}`);
-                        // console.log(`doty: ny(${ny}) * nr[1](${nr[1]}) = ${ny * nr[1]}`);
-                        // console.log(`mags: ${mags}`);
-                        // console.log(`radius: ${this.circle.radius}`);
-                        // normal x == this.x + adjacent
-                        const normalX = Number((nx + (Math.cos(90 - theta) * h)).toFixed(5));
+                        // const theta = Number((Math.acos(cosine) * 180 / Math.PI).toFixed(5));
+
+                        // const normalX = Number((nx + (Math.cos(90 - theta) * h)).toFixed(5));
+                        /*
                         const normalY = Number((ny + (Math.sin(90 - theta) * h)).toFixed(5));
     
                         const xDiff = Number((nx - normalX).toFixed(5));
@@ -161,28 +159,71 @@ class Bubble {
                         // console.log(`dotProd = Vy(${this.velocity[1]}) * radius(${this.circle.radius})`);
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
-    
+    */
+                        // NORMALIZE
+                        const collisionPoint = [this.x + this.velocity[0], this.y + this.velocity[1]];
+                        console.log(`xy: ${this.x}, ${this.y}\ncp: ${collisionPoint}`);
+                        const vOne = [this.x - this.cp[0], this.y - this.cp[1]];
+                        const vTwo = [collisionPoint[0] - this.cp[0], collisionPoint[1] - this.cp[1]];
+                        console.log(`vOne: ${vOne}\nvTwo: ${vTwo}`);
+
+                        const vOneX = vOne[0] * 10000;
+                        const vOneY = vOne[1] * 10000;
+                        const ct = Math.atan2(vOneY, vOneX);
+                        console.log(`Math.atan2(${vOneY}, ${vOneY}) = ${Math.atan2(vOneY, vOneX)}\nct: ${ct}`)
+
+                        const vTwoX = vTwo[0] * 10000;
+                        const vTwoY = vTwo[1] * 10000;
+                        const rt = Math.atan2(vTwoY, vTwoX);
+                        console.log(`Math.atan2(${vTwoY}, ${vTwoY}) = ${Math.atan2(vTwoY, vTwoX)}\nct: ${ct}`)
+                        const nt = ct - ((ct - rt) * 2);
+
+
+
+                        const currentMag = this.magnitude(vOne[0], vOne[1]);
+                        const np = [(Math.cos(nt) * this.dtc), (Math.sin(nt) * this.dtc)];
+                        console.log(`ct: ${ct}\nrt: ${rt}\nnt: ${nt}\ncurrentMag: ${currentMag}\nnxy(vOne): ${vOne}\nncollisionPoint(vTwo): ${vTwo}\nnp: ${np}`);
+
+                        const xd = np[0] - vTwo[0];
+                        const yd = np[1] - vTwo[1];
+                        console.log(`old velocity: ${this.velocity}`);
+                        this.velocity = [xd, yd];
+
+                        console.log(`new velocity: ${this.velocity}`);
+                        this.x += this.velocity[0];
+                        this.y += this.velocity[1];
+
                         // Empty tail to avoid spikey graphics
                         this.tailPoints = [];
                 } else {
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
                 }
-    
-    
+                //     0.3824048086
+                //     0.3814533465
+
                 // Draw tail first for layering
                 this.updateTail([this.x, this.y]);
                 this.drawTail();
-    
-    
+
+
                 // Then draw circle for greater z-index
                 this.drawBubble();
         }
-    
+
+        magnitude(x, y) {
+                let sqrt = Math.sqrt(x ** 2 + y ** 2);
+                // if (x < 0)
+                //         sqrt *= -1;
+                // if (y < 0)
+                //         sqrt *= -1;
+                return sqrt;
+        }
+
         toRadians(degree) {
                 return (Math.PI / 180) * degree;
         }
-    
+
         onClick() {
                 this.isPressed = true;
                 this.getDtc()
@@ -195,30 +236,30 @@ class Bubble {
                 this.tailPoints = [];
                 // console.log(`a: ${this.x - this.cp[0]}, c: ${this.cosine}, h: ${this.dtc}, theta: ${this.theta}, deg: ${this.degrees}, acos: ${Math.acos(this.cosine)}`)
         };
-    
+
         onRelease() {
                 this.isPressed = false;
                 this.dtc = this.getDtc();
-                
+
                 // If loco mode is active, bubbles should spiral inwards
                 if (this.loco) {
                         this.shouldSpiralIn = true;
                         this.tailPoints = [];
                 }
         }
-    
+
         getDtc() {
                 const xDelta = this.x - this.cp[0];
                 // console.log(`this.x = ${this.x} . . . this.circle.cp[0] = ${this.circle.cp[0]}`)
                 const yDelta = this.y - this.cp[1];
                 // console.log(`this.y = ${this.y} . . . this.circle.cp[1] = ${this.circle.cp[1]}`)
                 const dtc = Math.sqrt(xDelta ** 2 + yDelta ** 2);
-    
+
                 // console.log(`xDelta: ${xDelta} . . . yDelta: ${yDelta} . . . dtc: ${this.dtc} . . `);
                 this.dtc = dtc;
                 return dtc;
         }
-    
+
         spiralIn(frameCount) {
                 this.x = Math.sin(this.theta) * this.dtc * .98 + this.cp[0];
                 this.y = Math.cos(this.theta) * this.dtc * .98 + this.cp[1];
@@ -229,26 +270,26 @@ class Bubble {
                         this.shouldSpiralIn = false;
                 }
         }
-    
+
         spiralOut(frameCount) {
                 this.x = (Math.cos(this.theta) * this.dtc * 1.01) + this.cp[0];
                 this.y = (Math.sin(this.theta) * this.dtc * 1.01) + this.cp[1];
-    
-    
+
+
                 this.theta += frameCount % 2 == 0 ? 0 : .1;
         }
-    
+
         spiralOutShape(frameCount) {
                 let mag = this.r * Math.cos(this.theta * this.sides);
-    
+
                 if (this.loco) {
                         mag = this.theta * Math.cos(this.theta * this.sides) + this.r;
                         this.theta += .1;
                 }
-    
+
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
-    
+
                 // Special case for NON-loco-mode when sides are '1' 
                 if (this.sides == 1 && !this.loco) {
                         // shift back to left
@@ -257,14 +298,14 @@ class Bubble {
                 }
                 this.theta += .01;
 
-    
+
         }
-    
+
         expandOut() {
                 this.x = Math.cos(this.theta) * this.dtc * 1.01 + this.cp[0];
                 this.y = Math.sin(this.theta) * this.dtc * 1.01 + this.cp[1];
         }
-    
+
         updateTail(newPoints) {
                 // check to make sure the next tail point isn't longer than 40% of the radius
                 if (this.tailPoints.length > 0) {
@@ -277,7 +318,7 @@ class Bubble {
                 }
                 this.tailPoints.unshift(newPoints);
         }
-    
+
         drawBubble() {
                 // Then draw circle for greater z-index
                 this.context.beginPath()
@@ -291,7 +332,7 @@ class Bubble {
                 this.context.fillStyle = this.bubbleColor
                 this.context.fill()
         }
-    
+
         drawTail() {
                 // Skip if no points exist
                 if (this.tailPoints.length < 1) {
@@ -299,30 +340,30 @@ class Bubble {
                 }
                 // Shorthand
                 const ctx = this.context;
-    
+
                 // Create gradient based on point locations
                 this.tailColor = ctx.createLinearGradient(this.tailPoints[0][0], this.tailPoints[0][1], this.tailPoints[this.tailPoints.length - 1][0], this.tailPoints[this.tailPoints.length - 1][1]);
                 this.tailColor.addColorStop(0, "#ff00e1");
                 this.tailColor.addColorStop(1, "#00ffff00");
-    
+
                 ctx.beginPath();
                 ctx.moveTo(this.tailPoints[0][0], this.tailPoints[0][1]);
-    
+
                 this.tailPoints.map(point => {
                         ctx.lineTo(point[0], point[1]);
                 })
-    
+
                 ctx.strokeStyle = this.tailColor;
-    
+
                 ctx.lineWidth = this.radius;
                 ctx.stroke();
         }
-    
+
         handleSlider(e) {
                 e.preventDefault();
                 this.sides = this.shapeSidesInput.value;
         }
-    
+
         handleLocoBtn() {
                 this.loco = !this.loco;
         }
@@ -337,8 +378,8 @@ class Bubble {
                 e.preventDefault();
                 this.radius = this.sizeSlider.value;
         }
-    }
-    
-    
-    export default Bubble
-    
+}
+
+
+export default Bubble
+
