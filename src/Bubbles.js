@@ -49,7 +49,7 @@ function Bubbles(props) {
 
 
 function randomXY() {
-    return Math.floor(Math.random() * (ww/8)) - 200;
+    return Math.floor(Math.random() * (ww/8)) - (ww/16);
 }
 
 export default Bubbles;
