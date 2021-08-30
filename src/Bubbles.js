@@ -2,14 +2,16 @@ import Bubble from './Bubble.js'
 import { GradientSteps } from './Effects'
 
 
+const wh = window.innerHeight;
+const ww = window.innerWidth;
+
 function Bubbles(props) {
     const colors = GradientSteps('#00ffff', '#ff00e1', 14);
-    const wh = window.innerHeight;
-    const ww = window.innerWidth;
+
     props.context.canvas.width = ww;
     props.context.canvas.height = wh;
     const center = [ww / 2, wh / 2];
-    const quantity = ww / 10;
+    const quantity = wh / 10;
 
     // Initialization
     const bubbleContainer = []
@@ -47,7 +49,7 @@ function Bubbles(props) {
 
 
 function randomXY() {
-    return Math.floor(Math.random() * 400) - 200;
+    return Math.floor(Math.random() * (ww/8)) - 200;
 }
 
 export default Bubbles;
