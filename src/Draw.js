@@ -30,12 +30,17 @@ const WhiteCircle = (options, ctx) => {
         const { x, y, radius, colors } = options;
         ctx.beginPath();
         ctx.arc(ctx.canvas.width / 2, ctx.canvas.height / 2, radius, 0, (2 * Math.PI));
+
+        const circleColor = ctx.createRadialGradient(window.innerWidth / 2, window.innerHeight / 2, radius, x, y, radius);
+        circleColor.addColorStop(0 , "#00ffffa0");
+        circleColor.addColorStop(.2 , "#00fffaa0");
+        circleColor.addColorStop(1 , "#ff00ffa0");
+
         ctx.strokeStyle = colors.stroke;
         ctx.lineWidth = options.lineWidth || 2;
-        ctx.fillStyle = colors.fill;
-        ctx.stroke();
+        ctx.fillStyle = circleColor;
+        // ctx.stroke();
         ctx.fill();
-
 }
 
 

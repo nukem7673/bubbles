@@ -12,6 +12,8 @@ function Bubbles(props) {
     props.context.canvas.height = wh;
     const center = [ww / 2, wh / 2];
     const quantity = wh / 10;
+    // Props
+    const radius = Math.min(ww, wh) / 2.75;
 
     // Initialization
     const bubbleContainer = []
@@ -29,20 +31,42 @@ function Bubbles(props) {
             {
                 circle: {
                     cp: [ww / 2, wh / 2],
-                    radius: Math.min(ww, wh) / 2.75
+                    radius: radius
                 },
                 context: props.context,
                 color: colors[i],
                 strokeStyle: colors[strokeStyle],
                 key: i,
-                radius: '16',
+                radius: '4',
                 tailLength: 1,
                 x: x,
                 y: y,
+                z: 1,
                 velocity: velocity
             }
         ))
     }
+    
+    const refBubble = new Bubble(
+        {
+            circle: {
+                cp: [ww / 2, wh / 2],
+                radius: radius
+            },
+            context: props.context,
+            color: "#fffffff0",
+            strokeStyle: "#ffffff",
+            key: "center",
+            radius: radius + 14,
+            tailLength: 1,
+            x: ww / 2,
+            y: wh / 2,
+            z: 0,
+            velocity: [0, 0]
+        }
+    )
+
+    bubbleContainer[49] = refBubble;
     return bubbleContainer;
 }
 

@@ -18,11 +18,12 @@ const useCanvas = (draw, options = {}) => {
     const circleOptions = {
       x: window.innerHeight/2,
       y: window.innerWidth/2,
-      radius: Math.min(window.innerHeight,window.innerWidth) / 4,
+      radius: Math.min(window.innerWidth, window.innerHeight) / 2.75 + 10,
       colors: {
         stroke: "#ffffff",
         fill: "transparent"
-      }
+      },
+      lineWidth: 10
     }
 
     let frameCount = 0
@@ -33,6 +34,9 @@ const useCanvas = (draw, options = {}) => {
       frameCount++
      
       // WhiteCircle(circleOptions, context);
+      bubbleArray.sort((a, b) => {
+        return a.z - b.z;
+      })
       draw(bubbleArray, frameCount)
 
       animationFrameId = window.requestAnimationFrame(render)

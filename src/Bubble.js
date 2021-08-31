@@ -2,6 +2,9 @@
 
 class Bubble {
         constructor(props) {
+                // ID
+                this.key = props.key;
+
                 // Context and canvas props
                 this.context = props.context;
                 this.ch = this.context.canvas.height;
@@ -13,6 +16,7 @@ class Bubble {
                 // Bubble Positioning
                 this.x = props.x;
                 this.y = props.y;
+                this.z = props.z;
                 this.velocity = props.velocity;
                 this.mag = this.magnitude(this.x, this.y);
                 this.theta = null;
@@ -36,6 +40,8 @@ class Bubble {
                 this.color = props.color;
                 this.radius = props.radius;
                 this.strokeStyle = props.strokeStyle;
+                this.colorOne = this.key == "center" ? "#ffffff" : "#ff00e177";
+                this.colorTwo = this.key == "center" ? "#00ffffcc" : "#00ffff";
 
                 // Tail
                 this.tailLength = props.tailLength;
@@ -67,17 +73,19 @@ class Bubble {
                 this.spiralOut = this.locoBtn.classList[1] == "btn-outline-success";
 
                 // Listeners
-                this.context.canvas.addEventListener("touchstart", this.onClick);
-                this.context.canvas.addEventListener("mousedown", this.onClick);
+                if (props.key != "center") {
+                        this.context.canvas.addEventListener("touchstart", this.onClick);
+                        this.context.canvas.addEventListener("mousedown", this.onClick);
 
-                this.context.canvas.addEventListener("mouseup", this.onRelease);
-                this.context.canvas.addEventListener("touchend", this.onRelease)
+                        this.context.canvas.addEventListener("mouseup", this.onRelease);
+                        this.context.canvas.addEventListener("touchend", this.onRelease)
 
-                this.shapeSidesInput.addEventListener("input", this.handleSlider);
-                this.tailSlider.addEventListener("input", this.handleTailSlider);
-                this.sizeSlider.addEventListener("input", this.handleSizeSlider);
+                        this.shapeSidesInput.addEventListener("input", this.handleSlider);
+                        this.tailSlider.addEventListener("input", this.handleTailSlider);
+                        this.sizeSlider.addEventListener("input", this.handleSizeSlider);
 
-                this.locoBtn.addEventListener("click", this.handleLocoBtn);
+                        this.locoBtn.addEventListener("click", this.handleLocoBtn);
+                }
         }
 
 
@@ -86,7 +94,7 @@ class Bubble {
                 this.dtc = this.getDtc();
                 // DTC if velocity is added
                 const nextDTC = this.magnitude(this.x + this.velocity[0] - this.cp[0], this.y + this.velocity[1] - this.cp[1]);
-                console.log(`dtc: ${this.dtc}\nnextDTC: ${nextDTC}\nradius: ${this.c.radius}`);
+
                 // If user is holding input
                 if (this.isPressed) {
                         // this.spiralOut(frameCount);
@@ -134,6 +142,9 @@ class Bubble {
                         // Apply velocity before new draw
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
+
+                        // To simulate 3d effects, toggle visibility on every collision (as if it were behind the circle)
+                        this.z *= -1;
 
                         // Empty tail to avoid spikey graphics
                         this.tailPoints = [];
@@ -231,6 +242,7 @@ class Bubble {
 
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
+                this.z *= Math.cos(this.dtc / 100);
 
                 // Special case for NON-loco-mode when sides are '1' 
                 if (this.sides == 1 && !this.loco) {
@@ -267,8 +279,9 @@ class Bubble {
                 this.context.arc(this.x, this.y, this.radius, 0, (2 * Math.PI), false)
 
                 this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius);
-                this.bubbleColor.addColorStop(0, "#ff00e177");
-                this.bubbleColor.addColorStop(1, "#00ffff");
+                
+                this.bubbleColor.addColorStop(0, this.colorOne)
+                this.bubbleColor.addColorStop(1, this.colorTwo)
 
 
                 this.context.fillStyle = this.bubbleColor
