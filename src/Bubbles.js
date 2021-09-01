@@ -22,8 +22,8 @@ function Bubbles(props) {
     for (var i = 0; i < quantity; i++) {
         // Create an offset otherwise the reflections are just back and forth
         const offsets = [randomXY(), randomXY()];
-        const x = ww/2 + offsets[0];
-        const y = wh/2 + offsets[1];
+        const x = ww/2; // + offsets[0];
+        const y = wh/2; // + offsets[1];
         const velocity = [((Math.random() * 5) - 2.5), ((Math.random() * 5) - 2.5)];
         const strokeStyle = i+10;
 
@@ -57,7 +57,7 @@ function Bubbles(props) {
             color: "#fffffff0",
             strokeStyle: "#ffffff",
             key: "center",
-            radius: radius + 14,
+            radius: radius / .95,
             tailLength: 1,
             x: ww / 2,
             y: wh / 2,

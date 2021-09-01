@@ -40,7 +40,7 @@ class Bubble {
                 this.color = props.color;
                 this.radius = props.radius;
                 this.strokeStyle = props.strokeStyle;
-                this.colorOne = this.key == "center" ? "#ffffff" : "#ff00e177";
+                this.colorOne = this.key == "center" ? "#55cc00" : "#ff00e177";
                 this.colorTwo = this.key == "center" ? "#00ffffcc" : "#00ffff";
 
                 // Tail
@@ -239,10 +239,14 @@ class Bubble {
                         mag = this.theta * Math.cos(this.theta * this.sides) + this.r;
                         this.theta += .1;
                 }
+                // if (this.color == "#00ffff") { console.log(`cos(theta) = ${Math.cos(this.theta)}`); }
+
+                if ( (Math.cos(this.theta) < 0 && this.z > 0 ) || (Math.cos(this.theta) > 0 && this.z < 0) )
+                        this.z *= -1;
 
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
-                this.z *= Math.cos(this.dtc / 100);
+                // this.z *= Math.cos(this.dtc / 100);
 
                 // Special case for NON-loco-mode when sides are '1' 
                 if (this.sides == 1 && !this.loco) {
@@ -280,8 +284,11 @@ class Bubble {
 
                 this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius);
                 
-                this.bubbleColor.addColorStop(0, this.colorOne)
-                this.bubbleColor.addColorStop(1, this.colorTwo)
+                this.bubbleColor.addColorStop(0, "#aa00aa")
+                this.bubbleColor.addColorStop(0.04, "#ff11ff")
+                this.bubbleColor.addColorStop(.05, "#ffffff")
+                this.bubbleColor.addColorStop(.2, "#ffffff11")
+                this.bubbleColor.addColorStop(.4, "#ffffff00")
 
 
                 this.context.fillStyle = this.bubbleColor
