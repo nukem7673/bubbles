@@ -284,11 +284,16 @@ class Bubble {
 
                 this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius / 1.1);
                 
-                this.bubbleColor.addColorStop(0, "#aa00aa")
-                this.bubbleColor.addColorStop(0.04, "#ff11ff")
-                this.bubbleColor.addColorStop(.05, "#00ffff")
-                this.bubbleColor.addColorStop(.25, "#e3fff0aa")
-                this.bubbleColor.addColorStop(1, "#e3fff011")
+                if (this.key == "center") {
+                        this.bubbleColor.addColorStop(0, "#aa00aa")
+                        this.bubbleColor.addColorStop(0.04, "#ff11ff")
+                        this.bubbleColor.addColorStop(.05, "#00ffff")
+                        this.bubbleColor.addColorStop(.25, "#e3fff0aa")
+                        this.bubbleColor.addColorStop(1, "#e3fff011")
+                } else {
+                        this.bubbleColor.addColorStop(0, this.colorOne)
+                        this.bubbleColor.addColorStop(1, this.colorTwo)
+                }
 
 
                 this.context.fillStyle = this.bubbleColor
