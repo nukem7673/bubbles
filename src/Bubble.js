@@ -239,14 +239,13 @@ class Bubble {
                         mag = this.theta * Math.cos(this.theta * this.sides) + this.r;
                         this.theta += .1;
                 }
-                // if (this.color == "#00ffff") { console.log(`cos(theta) = ${Math.cos(this.theta)}`); }
 
-                if ( (Math.cos(this.theta) < 0 && this.z > 0 ) || (Math.cos(this.theta) > 0 && this.z < 0) )
+                if ( (Math.cos(this.theta) < 0 && this.z > 0 ) || (Math.cos(this.theta) > 0 && this.z < 0) && !this.loco)
                         this.z *= -1;
 
                 this.x = Math.cos(this.theta) * (mag) + this.cp[0];
                 this.y = Math.sin(this.theta) * (mag) + this.cp[1];
-                // this.z *= Math.cos(this.dtc / 100);
+
 
                 // Special case for NON-loco-mode when sides are '1' 
                 if (this.sides == 1 && !this.loco) {
@@ -256,6 +255,9 @@ class Bubble {
                 }
                 this.theta += .01;
 
+                if (this.loco) {
+                        this.z = Math.abs(this.z);
+                }
 
         }
 
