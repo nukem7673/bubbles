@@ -287,20 +287,20 @@ class Bubble {
                 this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 40, this.x, this.y, this.radius / 1.1);
                 
                 if (this.key == "center") {
-                        this.bubbleColor.addColorStop(0, "#220077fe")
+                        this.bubbleColor.addColorStop(0, "#220077")
 
                         // this.bubbleColor.addColorStop(.13, "#00ffff")
                         // this.bubbleColor.addColorStop(.45, "#e3fff0")
                         // this.bubbleColor.addColorStop(.55, "#00fff0")
                         this.bubbleColor.addColorStop(1, "#ccffffdd")
 
-                        const outlineGradient = this.context.createLinearGradient(0, 0, this.context.canvas.width, this.context.canvas.height);
-                        outlineGradient.addColorStop(0, "#00ffff");
-                        outlineGradient.addColorStop(1, "#ff00ff");
+                        // const outlineGradient = this.context.createLinearGradient(0, 0, this.context.canvas.width, this.context.canvas.height);
+                        // outlineGradient.addColorStop(0, "#00ffff");
+                        // outlineGradient.addColorStop(1, "#ff00ff");
 
-                        this.context.strokeStyle = outlineGradient;
-                        this.context.lineWidth = 5
-                        this.context.stroke()
+                        // this.context.strokeStyle = outlineGradient;
+                        // this.context.lineWidth = 5
+                        // this.context.stroke()
                 } else {
                         this.bubbleColor.addColorStop(0, this.colorOne)
                         this.bubbleColor.addColorStop(1, this.colorTwo)
