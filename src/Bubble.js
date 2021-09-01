@@ -317,7 +317,7 @@ class Bubble {
 
                 ctx.strokeStyle = this.tailColor;
 
-                ctx.lineWidth = this.radius;
+                ctx.lineWidth = this.radius == 4 ? 1 : this.radius;
                 ctx.stroke();
         }
 
