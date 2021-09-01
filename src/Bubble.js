@@ -282,13 +282,13 @@ class Bubble {
                 this.context.beginPath()
                 this.context.arc(this.x, this.y, this.radius, 0, (2 * Math.PI), false)
 
-                this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius);
+                this.bubbleColor = this.context.createRadialGradient(this.x, this.y, this.radius / 4, this.x, this.y, this.radius / 1.1);
                 
                 this.bubbleColor.addColorStop(0, "#aa00aa")
                 this.bubbleColor.addColorStop(0.04, "#ff11ff")
-                this.bubbleColor.addColorStop(.05, "#ffffff")
-                this.bubbleColor.addColorStop(.2, "#ffffff11")
-                this.bubbleColor.addColorStop(.4, "#ffffff00")
+                this.bubbleColor.addColorStop(.05, "#00ffff")
+                this.bubbleColor.addColorStop(.25, "#e3fff0aa")
+                this.bubbleColor.addColorStop(1, "#e3fff011")
 
 
                 this.context.fillStyle = this.bubbleColor
