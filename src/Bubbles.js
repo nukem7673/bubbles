@@ -24,7 +24,7 @@ function Bubbles(props) {
         const offsets = [randomXY(), randomXY()];
         const x = ww/2; // + offsets[0];
         const y = wh/2; // + offsets[1];
-        const velocity = [((Math.random() * 5) - 2.5), ((Math.random() * 5) - 2.5)];
+        const velocity = [((Math.random() * 10) - 5), ((Math.random() * 10) - 5)];
         const strokeStyle = i+10;
 
         bubbleContainer.push(new Bubble(
