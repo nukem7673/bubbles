@@ -11,7 +11,7 @@ function Bubbles(props) {
     props.context.canvas.width = ww;
     props.context.canvas.height = wh;
     const center = [ww / 2, wh / 2];
-    const quantity = wh / 10;
+    const quantity = wh / 5;
     // Props
     const radius = Math.min(ww, wh) / 2.75;
 
