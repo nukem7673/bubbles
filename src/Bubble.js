@@ -147,7 +147,7 @@ class Bubble {
                         this.z *= -1;
 
                         // Empty tail to avoid spikey graphics
-                        this.tailPoints = [];
+                        // this.tailPoints = [];
                 } else {
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
@@ -268,11 +268,11 @@ class Bubble {
 
         updateTail(newPoints) {
                 // check to make sure the next tail point isn't longer than 40% of the radius
-                if (this.tailPoints.length > 0) {
-                        const xd = Math.abs(newPoints[0] - this.tailPoints[0][0]);
-                        const yd = Math.abs(newPoints[1] - this.tailPoints[0][1]);
-                        const xyd = Math.sqrt(xd ** 2 + yd ** 2);
-                }
+                // if (this.tailPoints.length > 0) {
+                //         const xd = Math.abs(newPoints[0] - this.tailPoints[0][0]);
+                //         const yd = Math.abs(newPoints[1] - this.tailPoints[0][1]);
+                //         const xyd = Math.sqrt(xd ** 2 + yd ** 2);
+                // }
                 if (this.tailPoints.length > this.tailLength) {
                         this.tailPoints.pop();
                 }
