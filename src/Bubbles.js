@@ -57,7 +57,7 @@ function Bubbles(props) {
             color: "#fffffff0",
             strokeStyle: "#ffffff",
             key: "center",
-            radius: radius / .95,
+            radius: radius * .2,
             tailLength: 1,
             x: ww / 2,
             y: wh / 2,
