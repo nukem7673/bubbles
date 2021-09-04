@@ -35,6 +35,10 @@ class Bubble {
                 this.isOutside = false;
                 this.loco = false;
                 this.shouldSpiralIn = false;
+                this.lightShowMode = true;
+                this.hasBounced = false;
+		this.orbitRadius = null;
+		this.orbitTheta = .01;
 
                 // Styling
                 this.color = props.color;
@@ -56,17 +60,20 @@ class Bubble {
                 this.getDtc = this.getDtc.bind(this);
                 this.spiralIn = this.spiralIn.bind(this);
                 this.spiralOut = this.spiralOut.bind(this);
+                this.lightShow = this.lightShow.bind(this);
                 this.updateTail = this.updateTail.bind(this);
                 this.handleSlider = this.handleSlider.bind(this);
                 this.handleLocoBtn = this.handleLocoBtn.bind(this);
                 this.handleTailSlider = this.handleTailSlider.bind(this);
                 this.handleSizeSlider = this.handleSizeSlider.bind(this);
+		this.handleLightShowBtn = this.handleLightShowBtn.bind(this);
 
                 // Controls
                 this.shapeSidesInput = document.getElementById("customRange");
                 this.sizeSlider = document.getElementById("sizeRange");
                 this.tailSlider = document.getElementById("tailRange");
                 this.locoBtn = document.getElementById("spiralBtn");
+                this.lightShowBtn = document.getElementById("lightShowBtn");
 
                 // Shape Parameters
                 this.sides = this.shapeSidesInput.value;
@@ -85,6 +92,7 @@ class Bubble {
                         this.sizeSlider.addEventListener("input", this.handleSizeSlider);
 
                         this.locoBtn.addEventListener("click", this.handleLocoBtn);
+			this.lightShowBtn.addEventListener("click", this.handleLightShowBtn);
                 }
         }
 
@@ -111,7 +119,9 @@ class Bubble {
                 else if (!this.isPressed && this.shouldSpiralIn) {
                         this.spiralIn();
                 }
-
+                else if (this.lightShowMode && this.key != "center" && this.hasBounced) {
+                        this.lightShow(frameCount);
+                }
                 else if (nextDTC > this.c.radius) {
                         // Define a bounce (reflection) off the inner curved surface of the circle
 
@@ -148,6 +158,9 @@ class Bubble {
 
                         // Empty tail to avoid spikey graphics
                         // this.tailPoints = [];
+
+                        // Update state for hasBounced
+                        this.hasBounced = true;
                 } else {
                         this.x += this.velocity[0];
                         this.y += this.velocity[1];
@@ -194,11 +207,9 @@ class Bubble {
                 this.isPressed = false;
                 this.dtc = this.getDtc();
 
-                // If loco mode is active, bubbles should spiral inwards
-                if (this.loco) {
-                        this.shouldSpiralIn = true;
-                        this.tailPoints = [];
-                }
+
+                this.shouldSpiralIn = true;
+                this.tailPoints = [];
         }
 
         getDtc() {
@@ -211,6 +222,35 @@ class Bubble {
                 // console.log(`xDelta: ${xDelta} . . . yDelta: ${yDelta} . . . dtc: ${this.dtc} . . `);
                 this.dtc = dtc;
                 return dtc;
+        }
+
+        lightShow(frameCount) {
+                 // NORMALIZE - Subtract center point of circle from each point to get a "0" origin
+
+
+		if ( this.orbitRadius == null ) {
+			this.orbitRadius = this.dtc
+                	const vOne = [this.x - this.cp[0], this.y - this.cp[1]];
+	                // Current theta - 
+	                const ct = Math.atan2(vOne[1], vOne[0]);
+			this.theta = ct
+			this.orbitTheta = .01
+		}
+
+                const magFactor = Math.sin(this.orbitTheta); //frameCount * (Math.PI / 180));
+                const newMag = Number(this.orbitRadius * magFactor)
+
+                this.x = Math.cos(this.theta) * (newMag) + this.cp[0];// * Math.sin(ct + .01))) + this.cp[0];
+                this.y = Math.sin(this.theta) * (newMag) + this.cp[1];// * Math.sin(ct + .01))) + this.cp[1];
+                
+                // if (this.color == "#00ffff") { console.log(`magFactor: ${magFactor} . . . newMag: ${newMag}`) }
+
+		this.orbitTheta += .05
+		this.z = -1; // this.orbitTheta / this.orbitTheta
+		
+//		if ( this.theta > (Math.PI / 4) && this.theta < (Math.PI / 3 / 4 )) {
+		this.theta += (this.sides / 100)
+//		}
         }
 
         spiralIn(frameCount) {
@@ -346,6 +386,10 @@ class Bubble {
                 this.loco = !this.loco;
         }
 
+        handleLightShowBtn() {
+                this.lightShowMode = !this.lightShowMode;
+        }
+
         handleTailSlider(e) {
                 e.preventDefault();
                 this.tailLength = this.tailSlider.value;
@@ -360,4 +404,3 @@ class Bubble {
 
 
 export default Bubble
-
